@@ -32,4 +32,13 @@ including a current version of SikuliX-API (https://github.com/RaiMan/SikuliX-AP
 **History**
  - this is based on the developement at MIT (Tsung-Hsiang Chang (Sean aka vgod) and Tom Yeh) which was discontinued end 2011 (https://github.com/sikuli/sikuli) with a latest version called Sikuli X-1.0r930 (http://www.sikuli.org).
  - and the follow up repo https://github.com/RaiMan/Sikuli12.11, where I prepared the creation of a final version 1.0
- - in April 2013 I decided, to finally divide Sikuli X into the 2 packages SikuliX-IDE (this repo) and SikuliX-API (https://github.com/RaiMan/SikuliX-API), to better support future contributions.
+ - in April 2013 I decided, to divide Sikuli X into the 2 packages SikuliX-IDE (this repo) and SikuliX-API (https://github.com/RaiMan/SikuliX-API), to better support future contributions.
+
+**Support**
+ - until otherwise noted: questions, requests and bugs can be posted at https://answers.launchpad.net/sikuli
+ - the wiki in this repo will be used extensively to document anything (taking over this roll from the webpage and lauchpad)
+ - you might always post an issue with any content in this repo of course
+
+**Contribution**
+ - pull requests are always welcome, but must be with reference to the development branch (beginning mid June 2013)
+ - everyone is welcome to add interesting stuff, experiences, solutions to the wiki in this repo
