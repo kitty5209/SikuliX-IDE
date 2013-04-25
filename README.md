@@ -3,9 +3,13 @@ SikuliX-IDE
 
 **Current version: 1.0 Beta420 (branch master)**
 
-The IDE to edit and run Sikuli scripts (supported scripting languages Python/Jython)
-
-The downloadable packages contain everything needed <br />
+The IDE to edit and run Sikuli scripts (supported scripting languages Python/Jython).
+<br /><br />
+SikuliX-IDE is targeted at people who want to develop scripts using Sikuli features with one of the supported scripting languages.
+<br /><br />
+For the use of Sikuli features in Java programs, other Java based languages or Java aware scripting languages currently not supported by SikuliX-IDE you should use SikuliX-API (https://github.com/RaiMan/SikuliX-API). 
+<br /><br />
+The downloadable packages of SikuliX-IDE contain everything needed <br />
 including a current version of SikuliX-API (https://github.com/RaiMan/SikuliX-API).
 
 **Roadmap**
