@@ -1618,7 +1618,7 @@ public class SikuliIDE extends JFrame {
         h = (int) roi.getHeight();
         ide.setVisible(false);
         JButton icon;
-        if (prefs.getDefaultThumbHeight() > 0) {
+        if (prefs.getPrefMoreImageThumbs()) {
           icon = new EditorRegionButton(codePane, x, y, w, h);
           codePane.insertComponent(icon);
         } else {

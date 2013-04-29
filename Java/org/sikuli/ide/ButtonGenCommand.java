@@ -133,7 +133,7 @@ public class ButtonGenCommand extends JButton implements ActionListener,
           btnCapture.captureWithAutoDelay();
         } else {
           if (pane.showThumbs) {
-            if (pref.getDefaultThumbHeight() > 0) {
+            if (pref.getPrefMoreImageThumbs()) {
               pane.insertComponent(new ButtonCapture());
             } else {
               pane.insertComponent(new EditorPatternLabel(pane, ""));

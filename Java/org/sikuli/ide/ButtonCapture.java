@@ -207,7 +207,7 @@ class ButtonCapture extends ButtonOnToolbar implements ActionListener, Cloneable
   private boolean replaceButton(Element src, String imgFullPath) {
         if ("".equals(imgFullPath)
                 && _codePane.showThumbs
-                && PreferencesUser.getInstance().getDefaultThumbHeight() > 0) {
+                && PreferencesUser.getInstance().getPrefMoreImageThumbs()) {
           return true;
         }
 				int start = src.getStartOffset();
@@ -232,7 +232,7 @@ class ButtonCapture extends ButtonOnToolbar implements ActionListener, Cloneable
                 if (!_codePane.showThumbs) {
                   _codePane.insertString((new EditorPatternLabel(_codePane, imgFullPath)).toString());
                 } else {
-                  if (PreferencesUser.getInstance().getDefaultThumbHeight() > 0) {
+                  if (PreferencesUser.getInstance().getPrefMoreImageThumbs()) {
                     com = new EditorPatternButton(_codePane, imgFullPath);
                   } else {
                     com = new EditorPatternLabel(_codePane, imgFullPath);
@@ -257,7 +257,7 @@ class ButtonCapture extends ButtonOnToolbar implements ActionListener, Cloneable
     if (! pane.showThumbs) {
       pane.insertString(img);
     } else {
-      if (PreferencesUser.getInstance().getDefaultThumbHeight() > 0) {
+      if (PreferencesUser.getInstance().getPrefMoreImageThumbs()) {
         pane.insertComponent(new EditorPatternButton(pane, imgFilename));
       } else {
         pane.insertComponent(new EditorPatternLabel(pane, imgFilename));

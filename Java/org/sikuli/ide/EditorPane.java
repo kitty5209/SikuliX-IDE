@@ -74,12 +74,7 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
   //<editor-fold defaultstate="collapsed" desc="Initialization">
   public EditorPane() {
     pref = PreferencesUser.getInstance();
-    if (pref.getDefaultThumbHeight() < 0) {
-      showThumbs = false;
-    }
-    else {
-      showThumbs = true;
-    }
+    showThumbs = !pref.getPrefMorePlainText();
     setEditorKitForContentType("text/python", new EditorKit());
     setContentType("text/python");
     initKeyMap();
@@ -658,13 +653,13 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
     JComponent comp = null;
 
     if (ptn == patPatternStr || ptn == patPngStr) {
-      if (pref.getDefaultThumbHeight() > 0) {
+      if (pref.getPrefMoreImageThumbs()) {
         comp = EditorPatternButton.createFromString(this, imgStr, null);
       } else {
         comp = EditorPatternLabel.labelFromString(this, imgStr);
       }
     } else if (ptn == patRegionStr) {
-      if (pref.getDefaultThumbHeight() > 0) {
+      if (pref.getPrefMoreImageThumbs()) {
         comp = EditorRegionButton.createFromString(this, imgStr);
       } else {
         comp = EditorRegionLabel.labelFromString(this, imgStr);
