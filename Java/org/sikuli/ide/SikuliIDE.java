@@ -1156,14 +1156,12 @@ public class SikuliIDE extends JFrame {
               new ViewAction(ViewAction.CMD_LIST)));
     }
 
-    chkShowThumbs = new JCheckBoxMenuItem(_I("menuShowThumbs"), true);
+    chkShowThumbs = new JCheckBoxMenuItem(_I("menuShowThumbs"), false);
     _viewMenu.add(createMenuItem(chkShowThumbs,
             KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, scMask),
             new ViewAction(ViewAction.SHOW_THUMBS)));
 
-//TODO Message Area show/hide
 //TODO Message Area clear
-//TODO Message Area bottom/right
 //TODO Message Area LineBreak
   }
 

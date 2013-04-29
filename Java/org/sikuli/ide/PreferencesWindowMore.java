@@ -37,7 +37,6 @@ public class PreferencesWindowMore extends javax.swing.JPanel {
 		if (! prefs.getPrefMoreImagesPath().isEmpty()) {
 			prefMoreImagesPath.setText(prefs.getPrefMoreImagesPath());
 		}
-//TODO: implement message area hide/unhide
 		prefMoreMessage.setSelected(prefs.getPrefMoreMessage() == PreferencesUser.HORIZONTAL);
 //TODO: command bar as menu
 		prefMoreCommand.setSelected(prefs.getPrefMoreCommandBar());
@@ -47,6 +46,8 @@ public class PreferencesWindowMore extends javax.swing.JPanel {
 		prefMoreTextSearch.setSelected(prefs.getPrefMoreTextSearch());
 		prefMoreTextOCR.setSelected(prefs.getPrefMoreTextOCR());
 		prefMoreScripter.setSelected(prefs.getUserType() == PreferencesUser.SCRIPTER);
+		prefMoreImageThumbs.setSelected(prefs.getPrefMoreImageThumbs());
+		prefMorePlainText.setSelected(prefs.getPrefMorePlainText());
 		DEBUG = debug;
 		openingWindow = false;
 	}
@@ -103,6 +104,9 @@ public class PreferencesWindowMore extends javax.swing.JPanel {
     jSeparator9 = new javax.swing.JSeparator();
     prefMoreLblStatus = new javax.swing.JLabel();
     prefMoreLblTitle1 = new javax.swing.JLabel();
+    prefMoreImageThumbs = new javax.swing.JCheckBox();
+    prefMorePlainText = new javax.swing.JCheckBox();
+    jSeparator10 = new javax.swing.JSeparator();
 
     jTextField1.setText("jTextField1");
 
@@ -250,7 +254,7 @@ public class PreferencesWindowMore extends javax.swing.JPanel {
       }
     });
 
-    prefMoreScripter.setText("Activate the new layout (X-1.0) *");
+    prefMoreScripter.setText("Activate the new layout (X-1.0) *  (no CommandBar, MessageArea on right side)");
     prefMoreScripter.setToolTipText("... no command bar - in Tools menu instead, message area on right side, some more options ..."); // NOI18N
     prefMoreScripter.addChangeListener(new javax.swing.event.ChangeListener() {
       public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -260,173 +264,198 @@ public class PreferencesWindowMore extends javax.swing.JPanel {
 
     prefMoreLblTitle1.setText("* these prefs need a restart of the IDE - others are active after save (no restart needed)");
 
+    prefMoreImageThumbs.setText("ImageThumbs (on) / ImageLabels (off) *");
+    prefMoreImageThumbs.addChangeListener(new javax.swing.event.ChangeListener() {
+      public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        prefMoreThumbsStateChanged(evt);
+      }
+    });
+
+    prefMorePlainText.setText("show script as plain text");
+    prefMorePlainText.addChangeListener(new javax.swing.event.ChangeListener() {
+      public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        prefMorePlainStateChanged(evt);
+      }
+    });
+
     org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
       .add(layout.createSequentialGroup()
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-          .add(layout.createSequentialGroup()
-            .addContainerGap()
-            .add(jSeparator1))
-          .add(layout.createSequentialGroup()
-            .add(32, 32, 32)
-            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-              .add(prefMoreLblRun)
-              .add(layout.createSequentialGroup()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                  .add(prefMoreLblSave)
-                  .add(prefMoreLblImages))
-                .add(30, 30, 30)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                  .add(prefMoreImages)
-                  .add(layout.createSequentialGroup()
-                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                      .add(prefMoreHTML)
-                      .add(prefMoreRunSave))
-                    .add(75, 75, 75)
-                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                      .add(prefMoreClean)
-                      .add(prefMoreHighlight)))))
-              .add(prefMoreImagesPath)))
-          .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
-            .addContainerGap()
-            .add(jSeparator2))
-          .add(jSeparator3)
-          .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
-            .addContainerGap()
-            .add(jSeparator4))
-          .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
-            .addContainerGap()
-            .add(jSeparator5))
-          .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
-            .add(32, 32, 32)
-            .add(prefMoreLblLayout)
-            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .add(prefMoreMessage)
-            .add(26, 26, 26)
-            .add(prefMoreCommand)
-            .add(21, 21, 21))
-          .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
-            .addContainerGap()
-            .add(jSeparator6))
-          .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
-            .addContainerGap()
-            .add(jSeparator7))
-          .add(layout.createSequentialGroup()
-            .add(59, 59, 59)
-            .add(prefMoreLblStatus)
-            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .add(prefMoreBtnOk))
-          .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
-            .add(192, 192, 192)
-            .add(prefMoreLblTitle)
-            .add(0, 0, Short.MAX_VALUE)))
-        .addContainerGap())
+        .add(6, 6, 6)
+        .add(jSeparator5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 564, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+      .add(layout.createSequentialGroup()
+        .add(192, 192, 192)
+        .add(prefMoreLblTitle))
+      .add(layout.createSequentialGroup()
+        .add(26, 26, 26)
+        .add(prefMoreLblTitle1))
+      .add(layout.createSequentialGroup()
+        .add(6, 6, 6)
+        .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 564, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+      .add(layout.createSequentialGroup()
+        .add(32, 32, 32)
+        .add(prefMoreLblSave)
+        .add(73, 73, 73)
+        .add(prefMoreHTML)
+        .add(75, 75, 75)
+        .add(prefMoreClean))
+      .add(layout.createSequentialGroup()
+        .add(6, 6, 6)
+        .add(jSeparator2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 564, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+      .add(layout.createSequentialGroup()
+        .add(32, 32, 32)
+        .add(prefMoreLblRun)
+        .add(77, 77, 77)
+        .add(prefMoreRunSave)
+        .add(78, 78, 78)
+        .add(prefMoreHighlight))
+      .add(jSeparator3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 570, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+      .add(layout.createSequentialGroup()
+        .add(32, 32, 32)
+        .add(prefMoreLblImages)
+        .add(30, 30, 30)
+        .add(prefMoreImages))
+      .add(layout.createSequentialGroup()
+        .add(32, 32, 32)
+        .add(prefMoreImagesPath, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 538, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+      .add(layout.createSequentialGroup()
+        .add(6, 6, 6)
+        .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 564, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+      .add(layout.createSequentialGroup()
+        .add(32, 32, 32)
+        .add(prefMoreLblLayout)
+        .add(40, 40, 40)
+        .add(prefMoreMessage)
+        .add(26, 26, 26)
+        .add(prefMoreCommand))
+      .add(layout.createSequentialGroup()
+        .add(6, 6, 6)
+        .add(jSeparator6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 564, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
       .add(layout.createSequentialGroup()
         .add(32, 32, 32)
         .add(prefMoreLblLogsOld)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .add(63, 63, 63)
         .add(prefMoreLogActions)
         .add(50, 50, 50)
         .add(prefMoreLogInfo)
         .add(57, 57, 57)
-        .add(prefMoreLogDebug)
-        .add(49, 49, 49))
+        .add(prefMoreLogDebug))
       .add(layout.createSequentialGroup()
-        .addContainerGap()
-        .add(jSeparator8)
-        .addContainerGap())
+        .add(6, 6, 6)
+        .add(jSeparator7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 564, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
       .add(layout.createSequentialGroup()
         .add(33, 33, 33)
         .add(prefMoreLblText)
         .add(48, 48, 48)
         .add(prefMoreTextSearch)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .add(prefMoreTextOCR)
-        .add(30, 30, 30))
+        .add(61, 61, 61)
+        .add(prefMoreTextOCR))
       .add(layout.createSequentialGroup()
-        .addContainerGap()
-        .add(jSeparator9)
-        .addContainerGap())
+        .add(6, 6, 6)
+        .add(jSeparator8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 564, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
       .add(layout.createSequentialGroup()
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-          .add(layout.createSequentialGroup()
-            .add(32, 32, 32)
-            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-              .add(prefMoreScripter)
-              .add(jLabel1)))
-          .add(layout.createSequentialGroup()
-            .add(26, 26, 26)
-            .add(prefMoreLblTitle1)))
-        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .add(32, 32, 32)
+        .add(prefMoreScripter))
+      .add(layout.createSequentialGroup()
+        .add(6, 6, 6)
+        .add(jSeparator9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 564, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+      .add(layout.createSequentialGroup()
+        .add(32, 32, 32)
+        .add(prefMoreImageThumbs)
+        .add(47, 47, 47)
+        .add(prefMorePlainText))
+      .add(layout.createSequentialGroup()
+        .add(6, 6, 6)
+        .add(jSeparator10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 564, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+      .add(layout.createSequentialGroup()
+        .add(495, 495, 495)
+        .add(prefMoreBtnOk))
+      .add(layout.createSequentialGroup()
+        .add(59, 59, 59)
+        .add(prefMoreLblStatus))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
       .add(layout.createSequentialGroup()
-        .add(0, 0, 0)
         .add(jSeparator5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(6, 6, 6)
         .add(prefMoreLblTitle)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+        .add(12, 12, 12)
         .add(prefMoreLblTitle1)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(6, 6, 6)
         .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-          .add(prefMoreClean)
-          .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-            .add(prefMoreLblSave)
-            .add(prefMoreHTML)))
+        .add(6, 6, 6)
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+          .add(layout.createSequentialGroup()
+            .add(4, 4, 4)
+            .add(prefMoreLblSave))
+          .add(prefMoreHTML)
+          .add(prefMoreClean))
         .add(4, 4, 4)
         .add(jSeparator2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .add(4, 4, 4)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-          .add(prefMoreLblRun, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+          .add(layout.createSequentialGroup()
+            .add(4, 4, 4)
+            .add(prefMoreLblRun))
           .add(prefMoreRunSave)
           .add(prefMoreHighlight))
         .add(5, 5, 5)
         .add(jSeparator3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .add(3, 3, 3)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-          .add(prefMoreLblImages)
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+          .add(layout.createSequentialGroup()
+            .add(4, 4, 4)
+            .add(prefMoreLblImages))
           .add(prefMoreImages))
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(6, 6, 6)
         .add(prefMoreImagesPath, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(6, 6, 6)
         .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-          .add(prefMoreLblLayout)
+        .add(6, 6, 6)
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+          .add(layout.createSequentialGroup()
+            .add(4, 4, 4)
+            .add(prefMoreLblLayout))
           .add(prefMoreMessage)
           .add(prefMoreCommand))
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(6, 6, 6)
         .add(jSeparator6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-          .add(prefMoreLblLogsOld)
+        .add(12, 12, 12)
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+          .add(layout.createSequentialGroup()
+            .add(4, 4, 4)
+            .add(prefMoreLblLogsOld))
           .add(prefMoreLogActions)
           .add(prefMoreLogInfo)
           .add(prefMoreLogDebug))
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+        .add(12, 12, 12)
         .add(jSeparator7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-          .add(prefMoreLblText)
+        .add(12, 12, 12)
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+          .add(layout.createSequentialGroup()
+            .add(4, 4, 4)
+            .add(prefMoreLblText))
           .add(prefMoreTextSearch)
           .add(prefMoreTextOCR))
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-        .add(jSeparator8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .add(12, 12, 12)
+        .add(jSeparator8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+        .add(6, 6, 6)
         .add(prefMoreScripter)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(6, 6, 6)
         .add(jSeparator9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(6, 6, 6)
         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-          .add(prefMoreBtnOk)
-          .add(prefMoreLblStatus))
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(jLabel1))
+          .add(prefMoreImageThumbs)
+          .add(prefMorePlainText))
+        .add(6, 6, 6)
+        .add(jSeparator10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+        .add(6, 6, 6)
+        .add(prefMoreBtnOk)
+        .add(6, 6, 6)
+        .add(prefMoreLblStatus))
     );
   }// </editor-fold>//GEN-END:initComponents
 
@@ -468,13 +497,14 @@ public class PreferencesWindowMore extends javax.swing.JPanel {
 		prefs.setPrefMoreLogDebug(isSelected(prefMoreLogDebug));
 		prefs.setPrefMoreTextSearch(isSelected(prefMoreTextSearch));
 		prefs.setPrefMoreTextOCR(isSelected(prefMoreTextOCR));
+		prefs.setPrefMoreImageThumbs(isSelected(prefMoreImageThumbs));
+		prefs.setPrefMorePlainText(isSelected(prefMorePlainText));
 		prefs.setUserType(isSelected(prefMoreScripter)?PreferencesUser.SCRIPTER:PreferencesUser.SIKULI_USER);
 		if (! prefMoreImagesPath.getText().startsWith("PathToRepository")) {
 			prefs.setPrefMoreImagesPath(prefMoreImagesPath.getText());
 		}
 		setStatus(msg, true);
 	}
-
 
   private void prefMoreBtnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prefMoreBtnOkActionPerformed
 		savePrefs("Settings saved");
@@ -510,10 +540,14 @@ public class PreferencesWindowMore extends javax.swing.JPanel {
 				prefMoreLogActions.setSelected(false);
 				prefMoreLogDebug.setSelected(false);
 				prefMoreLogInfo.setSelected(false);
+				prefMoreImageThumbs.setSelected(false);
+				prefMorePlainText.setSelected(false);
 				savePrefs("Switched to new Layout - Restart IDE!");
 			}
 		}
 		else {
+			prefMoreImageThumbs.setSelected(true);
+			prefMorePlainText.setSelected(false);
 			prefMoreMessage.setSelected(true);
 			prefMoreCommand.setSelected(true);
 			prefMoreLogActions.setSelected(true);
@@ -560,6 +594,14 @@ public class PreferencesWindowMore extends javax.swing.JPanel {
     // TODO add your handling code here:
   }//GEN-LAST:event_prefMoreImagesPathActionPerformed
 
+  private void prefMoreThumbsStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_prefMoreThumbsStateChanged
+		isSelected(prefMoreImageThumbs);
+  }//GEN-LAST:event_prefMoreThumbsStateChanged
+
+  private void prefMorePlainStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_prefMorePlainStateChanged
+    isSelected(prefMorePlainText);
+  }//GEN-LAST:event_prefMorePlainStateChanged
+
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.ButtonGroup buttonGroup1;
   private javax.swing.ButtonGroup buttonGroup2;
@@ -570,6 +612,7 @@ public class PreferencesWindowMore extends javax.swing.JPanel {
   private javax.swing.JLabel jLabel1;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JSeparator jSeparator1;
+  private javax.swing.JSeparator jSeparator10;
   private javax.swing.JSeparator jSeparator2;
   private javax.swing.JSeparator jSeparator3;
   private javax.swing.JSeparator jSeparator4;
@@ -585,6 +628,7 @@ public class PreferencesWindowMore extends javax.swing.JPanel {
   private javax.swing.JCheckBox prefMoreCommand;
   private javax.swing.JCheckBox prefMoreHTML;
   private javax.swing.JCheckBox prefMoreHighlight;
+  private javax.swing.JCheckBox prefMoreImageThumbs;
   private javax.swing.JCheckBox prefMoreImages;
   private javax.swing.JTextField prefMoreImagesPath;
   private javax.swing.JLabel prefMoreLblImages;
@@ -600,6 +644,7 @@ public class PreferencesWindowMore extends javax.swing.JPanel {
   private javax.swing.JCheckBox prefMoreLogDebug;
   private javax.swing.JCheckBox prefMoreLogInfo;
   private javax.swing.JCheckBox prefMoreMessage;
+  private javax.swing.JCheckBox prefMorePlainText;
   private javax.swing.JCheckBox prefMoreRunSave;
   private javax.swing.JCheckBox prefMoreScripter;
   private javax.swing.JCheckBox prefMoreTextOCR;

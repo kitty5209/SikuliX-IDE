@@ -289,7 +289,24 @@ public class PreferencesUser {
 		return new Point(Integer.parseInt(x_y[0]), Integer.parseInt(x_y[1]));
 	}
 
-	// currently: last open filenames
+// ***** IDE Editor options
+	public void setPrefMoreImageThumbs(boolean flag) {
+		pref.putBoolean("PREF_MORE_IMAGE_THUMBS", flag);
+	}
+
+	public boolean getPrefMoreImageThumbs() {
+		return pref.getBoolean("PREF_MORE_IMAGE_THUMBS", true);
+	}
+
+	public void setPrefMorePlainText(boolean flag) {
+		pref.putBoolean("PREF_MORE_PLAIN_TEXT", flag);
+	}
+
+	public boolean getPrefMorePlainText() {
+		return pref.getBoolean("PREF_MORE_PLAIN_TEXT", false);
+	}
+
+// currently: last open filenames
 	public void setIdeSession(String session_str) {
 		pref.put("IDE_SESSION", session_str);
 	}
@@ -298,6 +315,7 @@ public class PreferencesUser {
 		return pref.get("IDE_SESSION", null);
 	}
 
+// support for IDE image path
 	public void setPrefMoreImages(boolean flag) {
 		pref.putBoolean("PREF_MORE_IMAGES", flag);
 	}
