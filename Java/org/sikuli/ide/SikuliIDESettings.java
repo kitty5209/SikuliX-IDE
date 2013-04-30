@@ -9,5 +9,5 @@ import org.sikuli.script.Settings;
 
 public class SikuliIDESettings {
 
-	public static final String SikuliVersion = Settings.SikuliVersion;
+	public static final String SikuliVersion = Settings.SikuliVersionIDE;
 }
