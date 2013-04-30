@@ -1,7 +1,7 @@
 SikuliX-IDE
 ===========
 
-**Current version: 1.0 Beta351 (branch master)** --- [click for downloadable packages](https://github.com/RaiMan/SikuliX-IDE/wiki/Packages)
+**Current version: 1.0 Beta500 (branch master)** --- [click for downloadable packages](https://github.com/RaiMan/SikuliX-IDE/wiki/Packages)
 
 The IDE to edit and run Sikuli scripts (supported scripting languages Python/Jython).
 <br /><br />
