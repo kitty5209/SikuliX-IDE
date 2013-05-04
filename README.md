@@ -5,6 +5,8 @@ SikuliX-IDE
 
 The IDE to edit and run Sikuli scripts (supported scripting languages Python/Jython).
 <br /><br />
+[Have a look at major improvements and new features](https://github.com/RaiMan/SikuliX-IDE/wiki/Release-Notes)
+<br /><br />
 SikuliX-IDE is targeted at people who want to develop and run scripts using Sikuli features with one of the supported scripting languages.
 <br /><br />
 For the use of Sikuli features in Java programs, other Java based languages or Java aware scripting languages currently not supported by SikuliX-IDE you should use SikuliX-API (https://github.com/RaiMan/SikuliX-API). 
