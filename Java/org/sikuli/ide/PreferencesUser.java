@@ -26,6 +26,7 @@ public class PreferencesUser {
 	final static int NEWBEE = 0;
 	final static int SCRIPTER = 1;
 	final static int SIKULI_USER = 2;
+  final static int THUMB_HEIGHT = 50;
 	final static String DEFAULT_CONSOLE_CSS =
 					"body   { font-family:serif; font-size: 12px; }"
 					+ ".normal{ color: black; }"
@@ -186,8 +187,12 @@ public class PreferencesUser {
 		pref.putInt("DEFAULT_THUMB_HEIGHT", h);
 	}
 
+	public void resetDefaultThumbHeight() {
+		pref.putInt("DEFAULT_THUMB_HEIGHT", THUMB_HEIGHT);
+	}
+
 	public int getDefaultThumbHeight() {
-		return pref.getInt("DEFAULT_THUMB_HEIGHT", 100);
+		return pref.getInt("DEFAULT_THUMB_HEIGHT", THUMB_HEIGHT);
 	}
 
 // ***** command bar
@@ -432,7 +437,11 @@ public class PreferencesUser {
 		if (SIKULI_USER != typ) {
 			setAutoNamingMethod(AUTO_NAMING_TIMESTAMP);
 		}
-		setDefaultThumbHeight(50);
+    if (getPrefMoreImageThumbs()) {
+      setDefaultThumbHeight(THUMB_HEIGHT);
+    } else {
+      setDefaultThumbHeight(0);
+    }
 
 // ***** command bar
 		if (NEWBEE == typ || SIKULI_USER == typ) {

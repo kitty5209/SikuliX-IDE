@@ -231,11 +231,8 @@ public class SikuliIDE extends JFrame {
     prefs = PreferencesUser.getInstance();
     if (prefs.getUserType() < 0) {
       prefs.setUserType(PreferencesUser.NEWBEE);
-      prefs.setDefaults(PreferencesUser.NEWBEE);
     }
-    if (prefs.getUserType() == PreferencesUser.SCRIPTER) {
-      prefs.setDefaultThumbHeight(0);
-    }
+    prefs.setDefaults(prefs.getUserType());
 
     _native.initIDE(this);
 
