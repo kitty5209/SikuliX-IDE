@@ -230,10 +230,14 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
 
   private void saveAsBundle(String bundlePath, String current) throws IOException {
     bundlePath = Utils.slashify(bundlePath, true);
-    if (_srcBundlePath != null) {
+    if (_srcBundlePath != null && !_srcBundleTemp) {
       FileManager.xcopy(_srcBundlePath, bundlePath, current);
     } else {
       FileManager.mkdir(bundlePath);
+      if (_srcBundleTemp) {
+        FileManager.deleteTempDir(_srcBundlePath);
+        _srcBundleTemp = false;
+      }
     }
     setSrcBundle(bundlePath);
     _editingFile = createSourceFile(bundlePath, ".py");
