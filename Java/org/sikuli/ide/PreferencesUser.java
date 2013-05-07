@@ -406,7 +406,7 @@ public class PreferencesUser {
 
 	public void setDefaults(int typ) {
 // ***** capture hot key
-		if (SIKULI_USER != typ) {
+		if (NEWBEE == typ) {
 			setCaptureHotkey(50);
 			setCaptureHotkeyModifiers(defaultCaptureHotkeyModifiers());
 			setCaptureDelay(1.0);
@@ -417,24 +417,24 @@ public class PreferencesUser {
 		setStopHotkeyModifiers(defaultStopHotkeyModifiers());
 
 // ***** indentation support
-		if (SIKULI_USER != typ) {
+		if (NEWBEE == typ) {
 			setExpandTab(true);
 			setTabWidth(4);
 		}
 
 // ***** font settings
-		if (SIKULI_USER != typ) {
+		if (NEWBEE == typ) {
 			setFontSize(14);
 			setFontName("Monospaced");
 		}
 
 // ***** locale support
-		if (SIKULI_USER != typ) {
+		if (NEWBEE == typ) {
 			setLocale(Locale.getDefault());
 		}
 
 // ***** image capture and naming
-		if (SIKULI_USER != typ) {
+		if (NEWBEE == typ) {
 			setAutoNamingMethod(AUTO_NAMING_TIMESTAMP);
 		}
     if (getPrefMoreImageThumbs()) {
@@ -444,17 +444,15 @@ public class PreferencesUser {
     }
 
 // ***** command bar
-		if (NEWBEE == typ || SIKULI_USER == typ) {
+		if (NEWBEE == typ) {
 			setPrefMoreCommandBar(true);
+			setAutoCaptureForCmdButtons(true);
 		} else {
 			setPrefMoreCommandBar(false);
 		}
-		if (SIKULI_USER != typ) {
-			setAutoCaptureForCmdButtons(true);
-		}
 
 // ***** save options
-		if (NEWBEE == typ || SIKULI_USER == typ) {
+		if (NEWBEE == typ) {
 			setAtSaveMakeHTML(true);
 		} else {
 			setAtSaveMakeHTML(false);
@@ -472,20 +470,16 @@ public class PreferencesUser {
 		setCheckUpdateTime();
 
 // ***** IDE general support
-		if (SIKULI_USER != typ) {
+		if (NEWBEE == typ) {
 			setIdeSize(new Dimension(0, 0));
 			setIdeLocation(new Point(0, 0));
 		}
 
-// currently: last open filenames
-		if (SIKULI_USER != typ) {
-			setIdeSession("");
-		}
 		setPrefMoreImages(false);
 		setPrefMoreImagesPath("");
 
 // ***** message area settings
-		if (NEWBEE == typ || SIKULI_USER == typ) {
+		if (NEWBEE == typ) {
 			setPrefMoreMessage(HORIZONTAL);
 		} else {
 			setPrefMoreMessage(VERTICAL);

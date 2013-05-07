@@ -231,8 +231,9 @@ public class SikuliIDE extends JFrame {
     prefs = PreferencesUser.getInstance();
     if (prefs.getUserType() < 0) {
       prefs.setUserType(PreferencesUser.NEWBEE);
+      prefs.setIdeSession("");
+      prefs.setDefaults(prefs.getUserType());
     }
-    prefs.setDefaults(prefs.getUserType());
 
     _native.initIDE(this);
 
@@ -566,7 +567,7 @@ public class SikuliIDE extends JFrame {
 		String warn = "Some scripts are not saved yet!";
     String title = SikuliIDEI18N._I("dlgAskCloseTab");
     String[] options = new String[3];
-    options[WARNING_DO_NOTHING] = typ + " immediatly";
+    options[WARNING_DO_NOTHING] = typ + " immediately";
     options[WARNING_ACCEPTED] = "Save all and " + typ;
     options[WARNING_CANCEL] = SikuliIDEI18N._I("cancel");
     int ret = JOptionPane.showOptionDialog(this, warn, title, 0, JOptionPane.WARNING_MESSAGE, null, options, options[2]);
