@@ -99,7 +99,7 @@ public class Utils {
 	}
 
 	public static String slashify(String path, boolean isDirectory) {
-		return Settings.slashify(path, isDirectory);
+		return FileManager.slashify(path, isDirectory);
 	}
 
 	public static boolean rename(String oldFile, String newFile) {
