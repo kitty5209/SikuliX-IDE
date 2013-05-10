@@ -61,7 +61,7 @@ class SectionBoxView extends BoxView {
       View view = getView(i);
       spans[i] = (int) view.getMinimumSpan(View.Y_AXIS);
       offset += spans[i - 1];
-      offsets[i] = offset + i*2;
+      offsets[i] = offset;
     }
     return;
   }
