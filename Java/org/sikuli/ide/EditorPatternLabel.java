@@ -32,6 +32,7 @@ import org.sikuli.script.Location;
 public class EditorPatternLabel extends EditorRegionLabel {
 
   public static String CAPTURE = "__CLICK-TO-CAPTURE__";
+  public static String NOTFOUND = "!? ";
   private String lblText;
   private EditorPane pane;
   private float sim;
@@ -49,17 +50,21 @@ public class EditorPatternLabel extends EditorRegionLabel {
 
   public EditorPatternLabel(EditorPane parentPane, String str) {
     super(parentPane, str);
-    pane = parentPane;
-    initLabel();
+    initLabel(parentPane);
+  }
+
+  public EditorPatternLabel(EditorPane parentPane, String str, String oldString) {
+    super(parentPane, str, oldString);
+    initLabel(parentPane);
   }
 
   public EditorPatternLabel(EditorPane parentPane, EditorPatternButton btn) {
     super(parentPane, btn.toString());
-    pane = parentPane;
-    initLabel();
+    initLabel(parentPane);
   }
 
-  private void initLabel () {
+  private void initLabel (EditorPane parentPane) {
+    pane = parentPane;
     sim = 0.7F;
     off = new Location(0,0);
     if ("".equals(pyText)) {
@@ -104,8 +109,10 @@ public class EditorPatternLabel extends EditorRegionLabel {
       imgFile = f.getAbsolutePath();
       img = f.getName();
       imgFileName = img.replaceFirst(".png", "").replaceFirst(".jpg", "");
-      lblText = imgFileName;
+    } else {
+      imgFileName = "!? " + ifile + " ?!";
     }
+    lblText = imgFileName;
   }
 
   public void showPopup(boolean show) {
@@ -157,7 +164,7 @@ public class EditorPatternLabel extends EditorRegionLabel {
   }
 
   public boolean isCaptureButton() {
-    return CAPTURE.equals(lblText);
+    return (CAPTURE.equals(lblText) || lblText.startsWith(NOTFOUND));
   }
 
   public void resetLabel(String imgFile, float sim, Location off) {
@@ -184,7 +191,9 @@ public class EditorPatternLabel extends EditorRegionLabel {
   }
 
   public void setLabelPyText() {
-    pyText = pane.getPatternString(img, sim, off);
+    if (! lblText.startsWith(NOTFOUND)) {
+      pyText = pane.getPatternString(img, sim, off);
+    }
   }
 
   public void setFile(String imgFile) {
@@ -247,11 +256,14 @@ public class EditorPatternLabel extends EditorRegionLabel {
         showPopup(false);
       }
     }
-    if ( ! CAPTURE.equals(lblText)) {
+    if ( ! CAPTURE.equals(lblText) && ! lblText.startsWith(NOTFOUND)) {
       (new EditorPatternButton(this)).actionPerformed(null);
     } else {
       Element x = pane.getLineAtPoint(me);
-      if (x == null) return;
+//TODO recapture not found image
+      if (x == null || lblText.startsWith(NOTFOUND)) {
+        return;
+      }
       (new ButtonCapture(pane, x)).actionPerformed(null);
     }
   }
@@ -259,7 +271,7 @@ public class EditorPatternLabel extends EditorRegionLabel {
   @Override
   public void mouseEntered(MouseEvent me) {
     super.mouseEntered(me);
-    if (CAPTURE.equals(lblText)) {
+    if (CAPTURE.equals(lblText) || lblText.startsWith(NOTFOUND)) {
       return;
     }
     if (!clickToShow) {

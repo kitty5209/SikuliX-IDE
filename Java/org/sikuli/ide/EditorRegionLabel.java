@@ -25,6 +25,7 @@ import org.sikuli.script.ScreenImage;
 public class EditorRegionLabel extends JLabel implements MouseListener, EventObserver {
 
   protected String pyText;
+  protected String oldPyText = null;
   private EditorPane editor;
   private Color bc = Color.BLACK;
   private Color bcs = Color.RED;
@@ -40,17 +41,22 @@ public class EditorRegionLabel extends JLabel implements MouseListener, EventObs
   EditorRegionLabel() {
   }
 
-  EditorRegionLabel(EditorPane pane, String str) {
+  EditorRegionLabel(EditorPane pane, String lblText) {
+    init(pane, lblText);
+  }
+
+  EditorRegionLabel(EditorPane pane, String lblText, String oldText) {
+    oldPyText = oldText;
+    init(pane, lblText);
+}
+
+  public void init(EditorPane pane, String lblText) {
       editor = pane;
-      pyText = str;
+      pyText = lblText;
       setFont(new Font(editor.getFont().getFontName(), Font.PLAIN, editor.getFont().getSize()));
       setBorder(bfinal);
       setCursor(new Cursor(Cursor.HAND_CURSOR));
       addMouseListener(this);
-      init();
-  }
-
-  public void init() {
       setText(pyText.replaceAll("Region", "").replaceAll("\\(", "").replaceAll("\\)", ""));
   }
 

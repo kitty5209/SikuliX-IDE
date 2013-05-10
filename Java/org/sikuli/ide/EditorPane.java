@@ -587,6 +587,7 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
     try {
       writeFile(temp.getAbsolutePath());
       this.read(new BufferedReader(new InputStreamReader(new FileInputStream(temp), "UTF8")), null);
+      updateDocumentListeners();
       return true;
     } catch (IOException ex) { }
     return false;
