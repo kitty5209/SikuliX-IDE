@@ -3,7 +3,7 @@
  * Released under the MIT License.
  *
  */
-package org.sikuli.ide.sikuli_test;
+package org.sikuli.ide.z_notused.sikuli_test;
 
 import org.sikuli.ide.SikuliIDE;
 
@@ -18,8 +18,8 @@ import junit.framework.TestFailure;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
-import org.python.util.PythonInterpreter; 
-import org.python.core.*; 
+import org.python.util.PythonInterpreter;
+import org.python.core.*;
 
 public class TextUnitTestRunner extends junit.textui.TestRunner {
 
@@ -49,7 +49,7 @@ public class TextUnitTestRunner extends junit.textui.TestRunner {
       String className = genTestClassName(filename);
       TestSuite ret = new TestSuite(className);
       PythonInterpreter interp = new PythonInterpreter();
-      String testCode = 
+      String testCode =
          "# coding=utf-8\n"+
          "from __future__ import with_statement\n"+
          "import junit\n"+

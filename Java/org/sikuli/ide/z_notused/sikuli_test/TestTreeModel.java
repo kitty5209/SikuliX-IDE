@@ -3,7 +3,7 @@
  * Released under the MIT License.
  *
  */
-package org.sikuli.ide.sikuli_test;
+package org.sikuli.ide.z_notused.sikuli_test;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -27,7 +27,7 @@ class TestTreeModel implements TreeModel {
 	private Hashtable fFailures= new Hashtable();
 	private Hashtable fErrors= new Hashtable();
 	private Hashtable fRunTests= new Hashtable();
-	
+
 	/**
 	 * Constructs a tree model with the given test as its root.
 	 */
@@ -35,7 +35,7 @@ class TestTreeModel implements TreeModel {
 		super();
 		fRoot= root;
 	}
-	
+
 	/**
 	 * adds a TreeModelListener
 	 */
@@ -54,12 +54,12 @@ class TestTreeModel implements TreeModel {
 	 * parent test suite.
 	 */
 	public int findTest(Test target, Test node, Vector path) {
-		if (target.equals(node)) 
+		if (target.equals(node))
 			return 0;
-			
+
 		TestSuite suite= isTestSuite(node);
 		for (int i= 0; i < getChildCount(node); i++) {
-			Test t= suite.testAt(i); 
+			Test t= suite.testAt(i);
 			int index= findTest(target, t, path);
 			if (index >= 0) {
 				path.insertElementAt(node, 0);
@@ -77,28 +77,28 @@ class TestTreeModel implements TreeModel {
 		int[] indices= {index};
 		Object[] changedChildren= {getChild(path.getLastPathComponent(), index)};
 		TreeModelEvent event= new TreeModelEvent(this, path, indices, changedChildren);
-		
+
 		Enumeration e= fModelListeners.elements();
-		while (e.hasMoreElements()) { 
+		while (e.hasMoreElements()) {
 			TreeModelListener l= (TreeModelListener) e.nextElement();
 			l.treeNodesChanged(event);
-		}	
+		}
 	}
 	/**
 	 * Gets the test at the given index
 	 */
 	public Object getChild(Object parent, int index) {
 		TestSuite suite= isTestSuite(parent);
-		if (suite != null) 
+		if (suite != null)
 			return suite.testAt(index);
-		return null; 
+		return null;
 	}
 	/**
 	 * Gets the number of tests.
 	 */
 	public int getChildCount(Object parent) {
 		TestSuite suite= isTestSuite(parent);
-		if (suite != null) 
+		if (suite != null)
 			return suite.testCount();
 		return 0;
 	}
@@ -114,7 +114,7 @@ class TestTreeModel implements TreeModel {
 					return i;
 			}
 		}
-		return -1; 
+		return -1;
 	}
 	/**
 	 * Returns the root of the tree
@@ -132,15 +132,15 @@ class TestTreeModel implements TreeModel {
 	 * Tests if the node is a TestSuite.
 	 */
 	TestSuite isTestSuite(Object node) {
-		if (node instanceof TestSuite) 
+		if (node instanceof TestSuite)
 			return (TestSuite)node;
-		if (node instanceof TestDecorator) { 
-			Test baseTest= ((TestDecorator)node).getTest(); 
-			return isTestSuite(baseTest); 
-		} 
+		if (node instanceof TestDecorator) {
+			Test baseTest= ((TestDecorator)node).getTest();
+			return isTestSuite(baseTest);
+		}
 		return null;
 	}
-	
+
 	/**
 	 * Called when the value of the model object was changed in the view
 	 */

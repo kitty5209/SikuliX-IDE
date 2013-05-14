@@ -3,7 +3,7 @@
  * Released under the MIT License.
  *
  */
-package org.sikuli.ide.sikuli_test;
+package org.sikuli.ide.z_notused.sikuli_test;
 
 import javax.swing.ListModel;
 

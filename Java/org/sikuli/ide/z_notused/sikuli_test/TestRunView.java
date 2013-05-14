@@ -3,7 +3,7 @@
  * Released under the MIT License.
  *
  */
-package org.sikuli.ide.sikuli_test;
+package org.sikuli.ide.z_notused.sikuli_test;
 
 import javax.swing.JTabbedPane;
 
@@ -13,7 +13,7 @@ import junit.framework.TestResult;
 /**
  * A TestRunView is shown as a page in a tabbed folder.
  * It contributes the page contents and can return
- * the currently selected tests. A TestRunView is 
+ * the currently selected tests. A TestRunView is
  * notified about the start and finish of a run.
  */
 interface TestRunView {
@@ -34,11 +34,11 @@ interface TestRunView {
 	 */
 	public void addTab(JTabbedPane pane);
 	/**
-	 * Informs that the suite is about to start 
+	 * Informs that the suite is about to start
 	 */
 	public void aboutToStart(Test suite, TestResult result);
 	/**
-	 * Informs that the run of the test suite has finished 
+	 * Informs that the run of the test suite has finished
 	 */
 	public void runFinished(Test suite, TestResult result);
 }

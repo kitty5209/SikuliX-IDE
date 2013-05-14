@@ -1,6 +1,8 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2010-2013, Sikuli.org
+ * Released under the MIT License.
+ *
+ * added RaiMan 2013
  */
 package org.sikuli.ide;
 

@@ -1,13 +1,14 @@
 /*
- * Copyright 2010-2011, Sikuli.org
+ * Copyright 2010-2013, Sikuli.org
  * Released under the MIT License.
  *
- * modified RaiMan 2012
+ * modified RaiMan 2013
  */
 package org.sikuli.ide;
 
 //TODO
 // dirty pane handling: on individual tab
+import org.sikuli.ide.z_notused.sikuli_test.UnitTestRunner;
 import com.explodingpixels.macwidgets.MacUtils;
 import java.awt.*;
 import java.awt.event.*;
@@ -29,7 +30,6 @@ import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
 import org.sikuli.ide.EditorKit;
 import org.sikuli.ide.extmanager.ExtensionManagerFrame;
-import org.sikuli.ide.sikuli_test.*;
 import org.sikuli.utility.AutoUpdater;
 import org.sikuli.ide.util.Utils;
 import org.sikuli.script.CommandArgs;

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#TODO to be implemneted in Java (-> FileManager.java)
 import sys, cgi
 import glob
 import re
@@ -63,8 +64,8 @@ HEADER = """
          h2 {
             display: inline;
             font-weight: normal;
-         }  
-         
+         }
+
          .info {
             border-bottom: 1px solid #ddd;
             padding-bottom: 5px;
@@ -205,7 +206,7 @@ for sikuli in srcs:
       src = open(py, "r")
       dest = open(py.replace(".py", ".html"), "w")
       filename = re.search(r'/([^/]*)\.py', f_py[0])
-      if filename: 
+      if filename:
          filename = filename.group(1)
       else:
          filename = re.search(r'\\([^\\]*)\.py', f_py[0]).group(1)

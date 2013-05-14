@@ -1,7 +1,8 @@
 /*
- * Copyright 2010-2011, Sikuli.org
+ * Copyright 2010-2013, Sikuli.org
  * Released under the MIT License.
  *
+ * modified RaiMan 2013
  */
 package org.sikuli.ide.util;
 
@@ -16,7 +17,8 @@ import org.sikuli.script.FileManager;
 import org.sikuli.script.Settings;
 
 public class Utils {
-
+//TODO consolidate with FileManager and Settings
+  
 	public static int stopRecorder() {
 		try {
 			String cmd[] = {"sh", "-c", "ps aux | grep MacRecorder | awk '{print $2}' | xargs kill"};

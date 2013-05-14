@@ -1,10 +1,16 @@
+/*
+ * Copyright 2010-2013, Sikuli.org
+ * Released under the MIT License.
+ *
+ * modified RaiMan 2013
+ */
 package org.sikuli.ide.util;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
 import java.awt.*;
 import java.awt.image.*;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 /**
  * Class GifDecoder - Decodes a GIF file into one or more frames.
@@ -316,7 +322,7 @@ public class GifDecoder {
   }
 
   /**
-   * Reads GIF file from specified file/URL source  
+   * Reads GIF file from specified file/URL source
    * (URL assumed if name contains ":/" or "file:")
    *
    * @param name String containing source
@@ -348,7 +354,7 @@ public class GifDecoder {
   protected void decodeImageData() {
     int NullCode = -1;
     int npix = iw * ih;
-    int available, 
+    int available,
       clear,
       code_mask,
       code_size,
@@ -517,7 +523,7 @@ public class GifDecoder {
         int count = 0;
         while (n < blockSize) {
           count = in.read(block, n, blockSize - n);
-          if (count == -1) 
+          if (count == -1)
             break;
           n += count;
         }

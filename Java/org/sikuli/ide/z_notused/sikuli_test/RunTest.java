@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.sikuli.ide.sikuli_test;
+package org.sikuli.ide.z_notused.sikuli_test;
 
 import java.io.File;
 import javax.swing.text.BadLocationException;

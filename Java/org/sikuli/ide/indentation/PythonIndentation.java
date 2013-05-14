@@ -1,7 +1,9 @@
 /*
- * Copyright 2010-2011, Sikuli.org
+ * Copyright 2010-2013, Sikuli.org
  * Released under the MIT License.
  *
+ * added karlmicha 2011
+ * modified RaiMan 2013
  */
 package org.sikuli.ide.indentation;
 
@@ -98,7 +100,7 @@ public class PythonIndentation {
     * text was fed to this object, this method returns true.
     * <p>
     * This method is not thread safe!
-    * 
+    *
     * @return true if the last logical line logically ends with a colon
     */
    public boolean endsLastLogicalLineWithColon(){
@@ -113,7 +115,7 @@ public class PythonIndentation {
     * Checks if the last logical line (logically) contains a colon. A logical
     * line logically contains a colon if it contains a colon that is not inside
     * a parenthesized expression, a string or a comment.
-    * 
+    *
     * @return true if the last logical line logically contains a colon
     */
    public boolean hasLastLogicalLineColon(){
@@ -132,7 +134,7 @@ public class PythonIndentation {
     * line. It does not recognize things like {@code print x; return}.
     * <p>
     * This method is not thread safe!
-    * 
+    *
     * @return true if the last logical line begins with a statement that usually
     *         terminates an indented block
     */
@@ -148,7 +150,7 @@ public class PythonIndentation {
     * {@code elif}, {@code except}, {@code finally}).
     * <p>
     * This method is not thread safe!
-    * 
+    *
     * @return true if the last physical line begins with a statement that must
     *         have a lower indentation level than the preceding block
     */
@@ -165,7 +167,7 @@ public class PythonIndentation {
     * {@code finally}, {@code def}, {@code class}).
     * <p>
     * This method is not thread safe!
-    * 
+    *
     * @return true if the logical line begins with a statement that starts a
     *         clause of a compound statement
     */
@@ -179,7 +181,7 @@ public class PythonIndentation {
    /**
     * Sets the number of whitespace columns that equals a single tab used by
     * this object to calculate the indentation of lines.
-    * 
+    *
     * @param tabWidth
     *           the number of whitespace columns that equals a single tab
     */
@@ -190,7 +192,7 @@ public class PythonIndentation {
    /**
     * Returns the number of whitespace columns that equals a single tab used by
     * this object to calculate the indentation of lines.
-    * 
+    *
     * @return the number of whitespace columns that equals a single tab
     */
    public int getTabWidth(){
@@ -210,7 +212,7 @@ public class PythonIndentation {
     * line or multiple lines or even incomplete lines. You can feed an entire
     * document at once, or line by line. Any new text will be (virtually)
     * appended to text added earlier.
-    * 
+    *
     * @param text
     *           a chunk of code
     */
@@ -221,7 +223,7 @@ public class PythonIndentation {
 
    /**
     * Returns the line number of the last line fed to this object.
-    * 
+    *
     * @return the line number of the last line (0-based)
     */
    public int getLastLineNumber(){
@@ -242,7 +244,7 @@ public class PythonIndentation {
     * Returns a hint about how the indentation of the last line fed to this
     * object should be changed. A negative value means decrease indentation
     * while a positive value means increase indentation by the returned value.
-    * 
+    *
     * @return the number of columns by which the indentation should be changed
     */
    public int shouldChangeLastLineIndentation(){
@@ -275,7 +277,7 @@ public class PythonIndentation {
     * following the last line fed to this object) should be changed. A negative
     * value means decrease indentation while a positive value means increase
     * indentation by the returned value.
-    * 
+    *
     * @return the number of columns by which the indentation should be changed
     */
    public int shouldChangeNextLineIndentation(){
@@ -374,7 +376,7 @@ public class PythonIndentation {
     * class
     * def
     * </pre>
-    * 
+    *
     * @return true if the last logical line should end with a colon but does not
     */
    public boolean shouldAddColon(){
