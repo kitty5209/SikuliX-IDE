@@ -9,14 +9,11 @@ package org.sikuli.ide;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 import org.sikuli.script.Location;
 import org.sikuli.script.Region;
 import org.sikuli.script.ScreenImage;
 import org.sikuli.script.ScreenUnion;
-import org.sikuli.ide.util.Utils;
 import org.sikuli.script.Debug;
 import org.sikuli.script.FileManager;
 

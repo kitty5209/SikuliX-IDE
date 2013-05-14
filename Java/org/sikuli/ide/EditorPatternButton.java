@@ -36,7 +36,8 @@ class EditorPatternButton extends JButton implements ActionListener, Serializabl
   private String buttonSimilar = "";
   private String buttonOffset = "";
   private EditorPatternLabel _lbl;
-	protected EditorPatternButton(EditorPane pane) {
+
+  protected EditorPatternButton(EditorPane pane) {
 		init(pane, null);
 	}
 
@@ -311,6 +312,12 @@ class EditorPatternButton extends JButton implements ActionListener, Serializabl
   @Override
   public void paint(Graphics g) {
     super.paint(g);
+    Graphics2D g2d = (Graphics2D)g;
+    drawText(g2d);
+    if( useThumbnail() ){
+       g2d.setColor( new Color(0, 128, 128, 128) );
+       g2d.drawRoundRect(3, 3, getWidth()-7, getHeight()-7, 5, 5);
+    }
   }
 
   private void drawText(Graphics2D g2d) {
