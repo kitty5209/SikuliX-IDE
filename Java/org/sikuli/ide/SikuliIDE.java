@@ -72,6 +72,7 @@ public class SikuliIDE extends JFrame {
   private SikuliIDEStatusBar _status = null;
   private ButtonCapture _btnCapture;
   private ButtonRun _btnRun, _btnRunViz;
+  private boolean ideIsRunningScript = false;
   private JXSearchField _searchField;
   private JMenuBar _menuBar = new JMenuBar();
   private JMenu _fileMenu = new JMenu(_I("menuFile"));
@@ -527,6 +528,14 @@ public class SikuliIDE extends JFrame {
       (new HelpAction()).checkUpdate(true);
     }
     pref.setCheckUpdateTime();
+  }
+
+  public boolean isRunningScript() {
+    return ideIsRunningScript;
+  }
+
+  public void setIsRunningScript(boolean state) {
+    ideIsRunningScript = state;
   }
 
   protected boolean doBeforeRun() {
@@ -1651,9 +1660,11 @@ public class SikuliIDE extends JFrame {
     }
 
     public void runCurrentScript() {
-      if (!SikuliIDE.getInstance().doBeforeRun()) {
+      SikuliIDE ide = SikuliIDE.getInstance();
+      if (ideIsRunningScript || !ide.doBeforeRun()) {
         return;
       }
+      ide.setIsRunningScript(true);
       _runningThread = new Thread() {
         @Override
         public void run() {
@@ -1685,6 +1696,7 @@ public class SikuliIDE extends JFrame {
               findErrorSource(e, tmpFile.getAbsolutePath());
             }
           } finally {
+            SikuliIDE.getInstance().setIsRunningScript(false);
             SikuliIDE.getInstance().setVisible(true);
             _runningThread = null;
           }
@@ -2214,7 +2226,9 @@ public class SikuliIDE extends JFrame {
     HotkeyManager.getInstance()._addHotkey(key, mod, new HotkeyListener() {
       @Override
       public void hotkeyPressed(HotkeyEvent e) {
-        onQuickCapture();
+        if (!SikuliIDE.getInstance().isRunningScript()) {
+          onQuickCapture();
+        }
       }
     });
   }
