@@ -13,6 +13,8 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.regex.Matcher;
@@ -504,27 +506,35 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
     return root.getElement(e);
   }
 
-
-//TODO not used
-  public void jumpTo(int lineNo, int column) throws BadLocationException {
+  public boolean jumpTo(int lineNo, int column) {
     Debug.log(6, "jumpTo: " + lineNo + "," + column);
-    int off = getLineStartOffset(lineNo - 1) + column - 1;
-    int lineCount = getDocument().getDefaultRootElement().getElementCount();
-    if (lineNo < lineCount) {
-      int nextLine = getLineStartOffset(lineNo);
-      if (off >= nextLine) {
-        off = nextLine - 1;
+    try {
+      int off = getLineStartOffset(lineNo - 1) + column - 1;
+      int lineCount = getDocument().getDefaultRootElement().getElementCount();
+      if (lineNo < lineCount) {
+        int nextLine = getLineStartOffset(lineNo);
+        if (off >= nextLine) {
+          off = nextLine - 1;
+        }
       }
+      if (off >= 0) {
+        setCaretPosition(off);
+      }
+    } catch (BadLocationException ex) {
+      jumpTo(lineNo);
+      return false;
     }
-    if (off < 0) {
-      off = 0;
-    }
-    setCaretPosition(off);
+    return true;
   }
 
-  public void jumpTo(int lineNo) throws BadLocationException {
+  public boolean jumpTo(int lineNo) {
     Debug.log(6, "jumpTo: " + lineNo);
-    setCaretPosition(getLineStartOffset(lineNo - 1));
+    try {
+      setCaretPosition(getLineStartOffset(lineNo - 1));
+    } catch (BadLocationException ex) {
+      return false;
+    }
+    return true;
   }
 
   public int getLineStartOffset(int line) throws BadLocationException {

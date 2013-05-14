@@ -933,10 +933,12 @@ public class SikuliIDE extends JFrame {
     }
 
     public void doCut(ActionEvent ae) {
+//TODO delete current line if no selection
       performEditorAction(DefaultEditorKit.cutAction, ae);
     }
 
     public void doCopy(ActionEvent ae) {
+//TODO copy current line if no selection
       performEditorAction(DefaultEditorKit.copyAction, ae);
     }
 
@@ -1868,10 +1870,7 @@ public class SikuliIDE extends JFrame {
       EditorLineNumberView lnview = (EditorLineNumberView) (scrPane.getRowHeader().getView());
       lnview.addErrorMark(line);
       EditorPane codePane = SikuliIDE.this.getCurrentCodePane();
-      try {
-        codePane.jumpTo(line);
-      } catch (BadLocationException be) {
-      }
+      codePane.jumpTo(line);
       codePane.requestFocus();
     }
 

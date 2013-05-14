@@ -23,7 +23,7 @@ public class EditorLineNumberView extends JComponent implements MouseListener {
   private static final Color BORDER_COLOR = new Color(155, 155, 155);
   private static Color FG_COLOR = Color.GRAY;
   private static Color BG_COLOR = new Color(241, 241, 241);
-  private static Color selBG_COLOR = new Color(200, 200, 200);
+  private static Color selBG_COLOR = new Color(220, 220, 220);
   private static final int WIDTH_TEMPLATE = 999;
   private static final int MARGIN = 5;
   private FontMetrics viewFontMetrics;
@@ -32,11 +32,12 @@ public class EditorLineNumberView extends JComponent implements MouseListener {
   private int textTopInset;
   private int textFontAscent;
   private int textFontHeight;
-  private JTextComponent text;
+  private EditorPane text;
   private SizeSequence sizes;
   private int startLine = 0;
   private boolean structureChanged = true;
   private Set<Integer> errLines = new HashSet<Integer>();
+  private int line;
 
   public EditorLineNumberView(JTextComponent text) {
     /**
@@ -47,7 +48,7 @@ public class EditorLineNumberView extends JComponent implements MouseListener {
     if (text == null) {
       throw new IllegalArgumentException("Text component required! Cannot be null!");
     }
-    this.text = text;
+    this.text = (EditorPane) text;
     updateCachedMetrics();
 
     UpdateHandler handler = new UpdateHandler();
@@ -212,10 +213,6 @@ public class EditorLineNumberView extends JComponent implements MouseListener {
 
   //<editor-fold defaultstate="collapsed" desc="mouse actions">
   @Override
-  public void mouseClicked(MouseEvent me) {
-  }
-
-  @Override
   public void mouseEntered(MouseEvent me) {
     setBackground(selBG_COLOR);
   }
@@ -223,6 +220,16 @@ public class EditorLineNumberView extends JComponent implements MouseListener {
   @Override
   public void mouseExited(MouseEvent me) {
     setBackground(BG_COLOR);
+  }
+
+  @Override
+  public void mouseClicked(MouseEvent me) {
+//TODO catch RIGHT CLICK
+    if (me.getClickCount() == 1) {
+      ((EditorPane) text).jumpTo(sizes.getIndex(me.getY())+1);
+    } else if (me.getClickCount() == 2) {
+      ((EditorPane) text).getDocument();
+    }
   }
 
   @Override
