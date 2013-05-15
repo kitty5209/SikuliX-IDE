@@ -23,7 +23,6 @@ public class EditorKit extends StyledEditorKit {
   public EditorKit() {
     _viewFactory = new EditorViewFactory();
   }
-
   public static final String deIndentAction = "SKL.DeindentAction";
   private static final TextAction[] defaultActions = {
     new InsertTabAction(),
@@ -40,6 +39,8 @@ public class EditorKit extends StyledEditorKit {
 
   public static class InsertTabAction extends TextAction {
 
+    private  PythonIndentation indentationLogic;
+
     public InsertTabAction() {
       super(insertTabAction);
     }
@@ -51,25 +52,17 @@ public class EditorKit extends StyledEditorKit {
     @Override
     public void actionPerformed(ActionEvent e) {
       Debug.log(5, "InsertTabAction " + e);
-      JTextComponent textArea = (JTextComponent) e.getSource();
-      actionPerformed(textArea);
+      JTextComponent text = (JTextComponent) e.getSource();
+      actionPerformed(text);
     }
 
-    public void actionPerformed(JTextComponent textArea) {
-      Document document = textArea.getDocument();
-      Element map = document.getDefaultRootElement();
-      PreferencesUser pref = PreferencesUser.getInstance();
-      boolean expandTab = pref.getExpandTab();
-      String tabWhitespace;
-      if (expandTab) {
-        int tabWidth = pref.getTabWidth();
-        char[] blanks = new char[tabWidth];
-        Arrays.fill(blanks, ' ');
-        tabWhitespace = new String(blanks);
-      } else {
-        tabWhitespace = "\t";
-      }
-      Caret c = textArea.getCaret();
+    public void actionPerformed(JTextComponent text) {
+      indentationLogic = ((EditorPane) text).getIndentationLogic();
+      boolean indentError = false;
+      Document doc = text.getDocument();
+      Element map = doc.getDefaultRootElement();
+      String tabWhitespace = PreferencesUser.getInstance().getTabWhitespace();
+      Caret c = text.getCaret();
       int dot = c.getDot();
       int mark = c.getMark();
       int dotLine = map.getElementIndex(dot);
@@ -84,27 +77,28 @@ public class EditorKit extends StyledEditorKit {
           for (int i = first; i < last; i++) {
             elem = map.getElement(i);
             start = elem.getStartOffset();
-            document.insertString(start, tabWhitespace, null);
+            doc.insertString(start, tabWhitespace, null);
           }
           elem = map.getElement(last);
           start = elem.getStartOffset();
           if (Math.max(c.getDot(), c.getMark()) != start) {
-            document.insertString(start, tabWhitespace, null);
+            doc.insertString(start, tabWhitespace, null);
           }
         } catch (BadLocationException ble) {
           ble.printStackTrace();
-          UIManager.getLookAndFeel().
-                  provideErrorFeedback(textArea);
+          UIManager.getLookAndFeel().provideErrorFeedback(text);
         }
       } else {
-        textArea.replaceSelection(tabWhitespace);
+        text.replaceSelection(tabWhitespace);
       }
     }
   }
 
   public static class DeindentAction extends TextAction {
+//TODO dedent not working consistently on last line (no last empty line)
 
-    private Segment s;
+    private Segment segLine;
+    private  PythonIndentation indentationLogic;
 
     public DeindentAction() {
       this(deIndentAction);
@@ -112,24 +106,24 @@ public class EditorKit extends StyledEditorKit {
 
     public DeindentAction(String name) {
       super(name);
-      s = new Segment();
+      segLine = new Segment();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      JTextComponent textArea = (JTextComponent) e.getSource();
-      actionPerformed(textArea);
+      Debug.log(5, "DedentAction " + e);
+      JTextComponent text = (JTextComponent) e.getSource();
+      actionPerformed(text);
     }
 
-    public void actionPerformed(JTextComponent textArea) {
-      Document document = textArea.getDocument();
-      Element map = document.getDefaultRootElement();
-      PreferencesUser pref = PreferencesUser.getInstance();
-      Caret c = textArea.getCaret();
+    public void actionPerformed(JTextComponent text) {
+      indentationLogic = ((EditorPane) text).getIndentationLogic();
+      StyledDocument doc = (StyledDocument) text.getDocument();
+      Element map = doc.getDefaultRootElement();
+      Caret c = text.getCaret();
       int dot = c.getDot();
       int mark = c.getMark();
       int line1 = map.getElementIndex(dot);
-      int tabSize = pref.getTabWidth();
 
       if (dot != mark) {
         int line2 = map.getElementIndex(mark);
@@ -139,53 +133,47 @@ public class EditorKit extends StyledEditorKit {
         try {
           for (line1 = begin; line1 < end; line1++) {
             elem = map.getElement(line1);
-            handleDecreaseIndent(elem, document, tabSize);
+            handleDecreaseIndent(line1, elem, doc);
           }
           elem = map.getElement(end);
           int start = elem.getStartOffset();
           if (Math.max(c.getDot(), c.getMark()) != start) {
-            handleDecreaseIndent(elem, document, tabSize);
+            handleDecreaseIndent(end, elem, doc);
           }
         } catch (BadLocationException ble) {
           ble.printStackTrace();
-          UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+          UIManager.getLookAndFeel().provideErrorFeedback(text);
         }
       } else {
         Element elem = map.getElement(line1);
         try {
-          handleDecreaseIndent(elem, document, tabSize);
+          handleDecreaseIndent(line1, elem, doc);
         } catch (BadLocationException ble) {
           ble.printStackTrace();
-          UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+          UIManager.getLookAndFeel().provideErrorFeedback(text);
         }
       }
 
     }
 
-    private final void handleDecreaseIndent(Element elem, Document doc,
-            int tabSize) throws BadLocationException {
+    private void handleDecreaseIndent(int line, Element elem, StyledDocument doc)
+            throws BadLocationException {
       int start = elem.getStartOffset();
       int end = elem.getEndOffset() - 1;
-      doc.getText(start, end - start, s);
-      int i = s.offset;
-      end = i + s.count;
+      doc.getText(start, end - start, segLine);
+      int i = segLine.offset;
+      end = i + segLine.count;
       if (end > i) {
-        if (s.array[i] == '\t') {
-          doc.remove(start, 1);
-        } else if (s.array[i] == ' ') {
-          i++;
-          int toRemove = 1;
-          while (i < end && s.array[i] == ' ' && toRemove < tabSize) {
-            i++;
-            toRemove++;
-          }
-          doc.remove(start, toRemove);
-        }
+        String leadingWS = PythonIndentation.getLeadingWhitespace(doc, start, end - start);
+        int toRemove = indentationLogic.checkDedent(leadingWS, line+1);
+        doc.remove(start, toRemove);
       }
     }
   }
 
   public static class InsertBreakAction extends TextAction {
+
+    private  PythonIndentation indentationLogic;
 
     public InsertBreakAction() {
       super(insertBreakAction);
@@ -195,70 +183,28 @@ public class EditorKit extends StyledEditorKit {
       super(name);
     }
 
-    public void insertBreak(JTextComponent textArea) {
-      boolean noSelection = textArea.getSelectionStart() == textArea.getSelectionEnd();
-
-      if (noSelection) {
-        insertNewlineWithAutoIndent(textArea);
-      } else {
-        textArea.replaceSelection("\n");
-      }
-    }
-
+    @Override
     public void actionPerformed(ActionEvent e) {
-      JTextComponent textArea = (JTextComponent) e.getSource();
-      insertBreak(textArea);
+      Debug.log(5, "InsertBreakAction " + e);
+      JTextComponent text = (JTextComponent) e.getSource();
+      insertBreak(text);
     }
 
-    static boolean isWhitespace(char ch) {
-      return ch == ' ' || ch == '\t';
-    }
-
-    static String getLeadingWhitespace(StyledDocument doc, int head, int len)
-            throws BadLocationException {
-      String ret = "";
-
-      int pos = head;
-      while (pos < head + len) {
-        Element e = doc.getCharacterElement(pos);
-        int eStart = e.getStartOffset(), eEnd = e.getEndOffset();
-        if (e.getName().equals(StyleConstants.ComponentElementName)) {
-          break;
-        }
-        String space = getLeadingWhitespace(doc.getText(eStart, eEnd - eStart));
-        ret += space;
-        if (space.length() < eEnd - eStart) {
-          break;
-        }
-
-        pos = eEnd;
+    public void insertBreak(JTextComponent text) {
+      indentationLogic = ((EditorPane) text).getIndentationLogic();
+      boolean noSelection = text.getSelectionStart() == text.getSelectionEnd();
+      if (noSelection) {
+        insertNewlineWithAutoIndent(text);
+      } else {
+        text.replaceSelection("\n");
+//TODO insertNewlineWithAutoIndent
       }
-      return ret;
     }
 
-    static String getLeadingWhitespace(String text) {
-      int len = text.length();
-      int count = 0;
-      while (count < len && isWhitespace(text.charAt(count))) {
-        count++;
-      }
-      return text.substring(0, count);
-    }
-
-    private static final int atEndOfLine(int pos, String s, int sLen) {
-      for (int i = pos; i < sLen; i++) {
-        if (!isWhitespace(s.charAt(i))) {
-          return i;
-        }
-      }
-      return -1;
-    }
-
-    private void insertNewlineWithAutoIndent(JTextComponent txt) {
-
+    private void insertNewlineWithAutoIndent(JTextComponent text) {
       try {
-        int caretPos = txt.getCaretPosition();
-        StyledDocument doc = (StyledDocument) txt.getDocument();
+        int caretPos = text.getCaretPosition();
+        StyledDocument doc = (StyledDocument) text.getDocument();
         Element map = doc.getDefaultRootElement();
         int lineNum = map.getElementIndex(caretPos);
         Element line = map.getElement(lineNum);
@@ -266,29 +212,29 @@ public class EditorKit extends StyledEditorKit {
         int end = line.getEndOffset() - 1;
         int len = end - start;
         String s = doc.getText(start, len);
-        PythonIndentation indentationLogic = ((EditorPane) txt).getIndentationLogic();
 
-        String leadingWS = getLeadingWhitespace(doc, start, caretPos - start);
+        String leadingWS = PythonIndentation.getLeadingWhitespace(doc, start, caretPos - start);
         StringBuffer sb = new StringBuffer("\n");
         sb.append(leadingWS);
+//TODO better control over automatic indentation
+        indentationLogic.checkIndent(leadingWS, lineNum+1);
 
         // If there is only whitespace between the caret and
         // the EOL, pressing Enter auto-indents the new line to
         // the same place as the previous line.
-        int nonWhitespacePos = atEndOfLine(caretPos - start, s, len);
+        int nonWhitespacePos = PythonIndentation.atEndOfLine(doc, caretPos, start, s, len);
         if (nonWhitespacePos == -1) {
           if (leadingWS.length() == len) {
             // If the line was nothing but whitespace, select it
             // so its contents get removed.
-            txt.setSelectionStart(start);
+            text.setSelectionStart(start);
           } else {
             // Select the whitespace between the caret and the EOL
             // to remove it
-            txt.setSelectionStart(caretPos);
+            text.setSelectionStart(caretPos);
           }
-          txt.setSelectionEnd(end);
-          txt.replaceSelection(sb.toString());
-
+          text.setSelectionEnd(end);
+          text.replaceSelection(sb.toString());
           // auto-indentation for python statements like if, while, for, try,
           // except, def, class and auto-deindentation for break, continue,
           // pass, return
@@ -319,13 +265,8 @@ public class EditorKit extends StyledEditorKit {
         // line. Additional auto-indentation or dedentation for
         // specific python statements is only done for the next line.
         else {
-          /*
-           sb.append(s.substring(nonWhitespacePos));
-           ((AbstractDocument)doc).replace(caretPos, end - caretPos, sb.toString(), null);
-           txt.setCaretPosition(caretPos + leadingWS.length()+1);
-           */
-          doc.insertString(caretPos, sb.toString(), null);
-
+          text.setCaretPosition(nonWhitespacePos);
+          doc.insertString(nonWhitespacePos, sb.toString(), null);
           analyseDocument(doc, lineNum, indentationLogic);
           int nextLineChange = indentationLogic.shouldChangeNextLineIndentation();
           if (nextLineChange != 0) {
@@ -336,7 +277,7 @@ public class EditorKit extends StyledEditorKit {
         }
 
       } catch (BadLocationException ble) {
-        txt.replaceSelection("\n");
+        text.replaceSelection("\n");
         ble.printStackTrace();
       }
 
@@ -362,7 +303,7 @@ public class EditorKit extends StyledEditorKit {
      * @throws BadLocationException if the specified line does not exist
      */
     // TODO: make this a method of SikuliDocument, no need to pass document as argument
-    private void changeIndentation(DefaultStyledDocument document, int linenum,
+    private void changeIndentation(DefaultStyledDocument doc, int linenum,
             int columns) throws BadLocationException {
       PreferencesUser pref = PreferencesUser.getInstance();
       boolean expandTab = pref.getExpandTab();
@@ -371,9 +312,9 @@ public class EditorKit extends StyledEditorKit {
       if (linenum < 0) {
         throw new BadLocationException("Negative line", -1);
       }
-      Element map = document.getDefaultRootElement();
+      Element map = doc.getDefaultRootElement();
       if (linenum >= map.getElementCount()) {
-        throw new BadLocationException("No such line", document.getLength() + 1);
+        throw new BadLocationException("No such line", doc.getLength() + 1);
       }
       if (columns == 0) {
         return;
@@ -382,7 +323,7 @@ public class EditorKit extends StyledEditorKit {
       Element lineElem = map.getElement(linenum);
       int lineStart = lineElem.getStartOffset();
       int lineLength = lineElem.getEndOffset() - lineStart;
-      String line = document.getText(lineStart, lineLength);
+      String line = doc.getText(lineStart, lineLength);
 
       // determine current indentation and number of whitespace characters
       int wsChars;
@@ -400,7 +341,7 @@ public class EditorKit extends StyledEditorKit {
 
       int newIndentation = indentation + columns;
       if (newIndentation <= 0) {
-        document.remove(lineStart, wsChars);
+        doc.remove(lineStart, wsChars);
         return;
       }
 
@@ -415,15 +356,18 @@ public class EditorKit extends StyledEditorKit {
       for (; ind < newIndentation; ind++) {
         newWs.append(' ');
       }
-      document.replace(lineStart, wsChars, newWs.toString(), null);
+      doc.replace(lineStart, wsChars, newWs.toString(), null);
     }
   }
 
   private static class NextVisualPositionAction extends TextAction {
+
     private boolean select;
     private int direction;
 
     NextVisualPositionAction(String nm, boolean select, int dir) {
+//TODO forward selection space+image - space not selected alone
+//TODO up/down might step left or right
       super(nm);
       this.select = select;
       this.direction = dir;
@@ -543,6 +487,7 @@ public class EditorKit extends StyledEditorKit {
     }
   }
 
+//<editor-fold defaultstate="collapsed" desc="general support functions">
   @Override
   public Action[] getActions() {
     return TextAction.augmentList(super.getActions(), defaultActions);
@@ -605,4 +550,6 @@ public class EditorKit extends StyledEditorKit {
     }
     out.close();
   }
+//</editor-fold>
+
 }

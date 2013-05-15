@@ -9,6 +9,12 @@ package org.sikuli.ide.indentation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import org.sikuli.ide.PreferencesUser;
+import org.sikuli.script.Debug;
 
 /**
  * Implements the logic for giving hints about the (correct) indentation of new
@@ -73,7 +79,6 @@ public class PythonIndentation {
    private static final Pattern COMPOUND_HEADER_STATEMENT_WITHOUT_ARG = Pattern
          .compile("^\\s*(?:else|try|except|finally)\\b(?:\\s*:)?\\s*$");
 
-   private PythonState pythonState;
    private Matcher endsWithColonMatcher = ENDS_WITH_COLON.matcher("");
    private Matcher unindentNextLineStatementMatcher = UNINDENT_NEXT_LINE_STATEMENT
          .matcher("");
@@ -84,11 +89,38 @@ public class PythonIndentation {
    private Matcher compoundHeaderStatementWithoutArgMatcher = COMPOUND_HEADER_STATEMENT_WITHOUT_ARG
          .matcher("");
 
+   private PythonState pythonState;
    private boolean wasColonAdded;
 
    public PythonIndentation(){
       pythonState = new PythonState();
       wasColonAdded = false;
+   }
+
+   public void checkIndent(String leadingWhitespace, int line) {
+     if(leadingWhitespace.contains("\t") && leadingWhitespace.contains(" ")) {
+
+     }
+     int lws = leadingWhitespace.length();
+     int tws = PreferencesUser.getInstance().getTabWhitespace().length();
+//TODo obsolete, when indentation is checked at load time
+     if(tws > 1 && leadingWhitespace.contains("\t") && leadingWhitespace.contains(" ")) {
+       Debug.error("PythonIndentation: indent has mixed tab and space in line " + line);
+     }
+     if (tws == 1 || (lws % tws) == 0) {
+       return;
+     }
+     Debug.error("PythonIndentation: indent not consistent with tab settings in line " + line);
+   }
+
+   public int checkDedent(String leadingWhitespace, int line) {
+     int lws = leadingWhitespace.length();
+     int tws = PreferencesUser.getInstance().getTabWhitespace().length();
+     if (lws < tws) {
+       return lws;
+     }
+     checkIndent(leadingWhitespace, line);
+     return tws;
    }
 
    /**
@@ -385,4 +417,50 @@ public class PythonIndentation {
       return isLastLogicalLineCompoundHeaderStatement()
             && !hasLastLogicalLineColon();
    }
+
+   //<editor-fold defaultstate="collapsed" desc="support for detecting whitespace">
+   public static String getLeadingWhitespace(String text) {
+     int len = text.length();
+     int count = 0;
+     while (count < len && isWhitespace(text.charAt(count))) {
+       count++;
+     }
+     return text.substring(0, count);
+   }
+
+   public static String getLeadingWhitespace(StyledDocument doc, int head, int len) throws BadLocationException {
+     String ret = "";
+     int pos = head;
+     while (pos < head + len) {
+       Element e = doc.getCharacterElement(pos);
+       if (e.getName().equals(StyleConstants.ComponentElementName)) {
+         break;
+       }
+       int eStart = e.getStartOffset();
+       int eEnd = e.getEndOffset();
+       String space = getLeadingWhitespace(doc.getText(eStart, eEnd - eStart));
+       ret += space;
+       if (space.length() < eEnd - eStart) {
+         break;
+       }
+       pos = eEnd;
+     }
+     return ret;
+   }
+
+   public static int atEndOfLine(StyledDocument doc, int cpos, int start, String s, int sLen) {
+     for (int i = cpos - start; i < sLen; i++) {
+       if (doc.getCharacterElement(cpos).getName().equals(StyleConstants.ComponentElementName) || !isWhitespace(s.charAt(i))) {
+         return i + start;
+       }
+       cpos++;
+     }
+     return -1;
+   }
+
+   public static boolean isWhitespace(char ch) {
+     return ch == ' ' || ch == '\t';
+   }
+   //</editor-fold>
+
 }

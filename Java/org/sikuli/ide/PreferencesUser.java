@@ -9,6 +9,7 @@ package org.sikuli.ide;
 import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Point;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.prefs.*;
@@ -140,6 +141,16 @@ public class PreferencesUser {
 	public int getTabWidth() {
 		return pref.getInt("TAB_WIDTH", 4);
 	}
+
+  public String getTabWhitespace() {
+    if (getExpandTab()) {
+      char[] blanks = new char[getTabWidth()];
+      Arrays.fill(blanks, ' ');
+      return new String(blanks);
+    } else {
+      return "\t";
+    }
+  }
 
 // ***** font settings
 	public void setFontSize(int size) {
