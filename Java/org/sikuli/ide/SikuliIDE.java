@@ -523,7 +523,7 @@ public class SikuliIDE extends JFrame {
     }
     long last_check = pref.getCheckUpdateTime();
     long now = (new Date()).getTime();
-    if (now - last_check > 1000 * 86400) {
+    if (now - last_check > 1000 * 604800) {
       Debug.log(3, "autocheck update");
       (new HelpAction()).checkUpdate(true);
     }
