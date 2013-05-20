@@ -21,7 +21,8 @@ including a current version of SikuliX-API (https://github.com/RaiMan/SikuliX-AP
 **Roadmap**
  - **2013 May 22:** release of SikuliX-IDE 1.0
   - there will be packages for Windows, Mac and Linux both 32- and 64-Bit
-  - more information: https://github.com/RaiMan/Sikuli12.11
+  - more information: [start here ...](http://www.sikuli.org/download.html)
+  - there will be service updates, if necessary (Help menu -> check for updates or Prefs: autoupdate)
 <br />
 <br />
  - **2013 June 15:** open a developement branch for SikuliX-IDE 1.1
