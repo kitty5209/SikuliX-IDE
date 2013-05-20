@@ -267,6 +267,14 @@ public class PreferencesUser {
 		return pref.getBoolean("CHECK_UPDATE", true);
 	}
 
+	public void setWantBeta(boolean flag) {
+		pref.putBoolean("WANT_BETA", flag);
+	}
+
+	public boolean getWantBeta() {
+		return pref.getBoolean("WANT_BETA", false);
+	}
+
 	public void setLastSeenUpdate(String ver) {
 		pref.put("LAST_SEEN_UPDATE", ver);
 	}

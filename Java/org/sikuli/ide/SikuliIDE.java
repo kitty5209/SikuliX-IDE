@@ -1281,8 +1281,9 @@ public class SikuliIDE extends JFrame {
             null, new HelpAction(HelpAction.OPEN_ASK)));
     _helpMenu.add(createMenuItem(_I("menuHelpBugReport"),
             null, new HelpAction(HelpAction.OPEN_BUG_REPORT)));
-    _helpMenu.add(createMenuItem(_I("menuHelpTranslation"),
-            null, new HelpAction(HelpAction.OPEN_TRANSLATION)));
+
+//    _helpMenu.add(createMenuItem(_I("menuHelpTranslation"),
+//            null, new HelpAction(HelpAction.OPEN_TRANSLATION)));
 
     _helpMenu.addSeparator();
     _helpMenu.add(createMenuItem(_I("menuHelpHomepage"),
@@ -1314,7 +1315,7 @@ public class SikuliIDE extends JFrame {
     }
 
     public void openQuickStart(ActionEvent ae) {
-      FileManager.openURL("http://sikuli.org/");
+      FileManager.openURL("https://github.com/RaiMan/SikuliX-IDE/wiki/Release-Notes-IDE");
     }
 
     public void openDoc(ActionEvent ae) {
@@ -1354,16 +1355,37 @@ public class SikuliIDE extends JFrame {
     }
 
     public boolean checkUpdate(boolean isAutoCheck) {
+      JFrame f = null;
+      String ver = "";
+      String details;
       AutoUpdater au = new AutoUpdater();
+      if (! isAutoCheck) {
+//TODO replace this hack: wait update check
+        f = au.showUpdateFrame("Checking for new version ... pls. wait!",
+            "Checking for new version ... pls. wait! Checking for new version ... pls. wait!", -1);
+      }
       PreferencesUser pref = PreferencesUser.getInstance();
-      Debug.log(3, "being asked to check update");
-      if (au.checkUpdate()) {
-        String ver = au.getVersion();
+      Debug.log(2, "being asked to check update");
+      int whatUpdate = au.checkUpdate();
+      if (f != null) {
+        f.dispose();
+      }
+      if (whatUpdate >= AutoUpdater.SOMEBETA) {
+//TODO add Prefs wantBeta check
+        whatUpdate -= AutoUpdater.SOMEBETA;
+      }
+      if ( whatUpdate > 0 ) {
+        if (whatUpdate == AutoUpdater.BETA) {
+          ver = au.getBeta();
+          details = au.getBetaDetails();
+        } else {
+          ver = au.getVersion();
+          details = au.getDetails();
+        }
         if (isAutoCheck && pref.getLastSeenUpdate().equals(ver)) {
           return false;
         }
-        String details = au.getDetails();
-        au.showUpdateFrame(_I("dlgUpdateAvailable", ver), details);
+        au.showUpdateFrame(_I("dlgUpdateAvailable", ver), details, whatUpdate);
         PreferencesUser.getInstance().setLastSeenUpdate(ver);
         return true;
       }
