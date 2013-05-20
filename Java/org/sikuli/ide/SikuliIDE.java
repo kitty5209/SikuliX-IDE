@@ -8,7 +8,6 @@ package org.sikuli.ide;
 
 //TODO
 // dirty pane handling: on individual tab
-import org.sikuli.ide.z_notused.sikuli_test.UnitTestRunner;
 import com.explodingpixels.macwidgets.MacUtils;
 import java.awt.*;
 import java.awt.event.*;
@@ -30,8 +29,8 @@ import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
 import org.sikuli.ide.EditorKit;
 import org.sikuli.ide.extmanager.ExtensionManagerFrame;
-import org.sikuli.utility.AutoUpdater;
 import org.sikuli.ide.util.Utils;
+import org.sikuli.ide.z_notused.sikuli_test.UnitTestRunner;
 import org.sikuli.script.CommandArgs;
 import org.sikuli.script.Debug;
 import org.sikuli.script.EventObserver;
@@ -40,12 +39,13 @@ import org.sikuli.script.FileManager;
 import org.sikuli.script.HotkeyEvent;
 import org.sikuli.script.HotkeyListener;
 import org.sikuli.script.HotkeyManager;
+import org.sikuli.script.Location;
 import org.sikuli.script.OverlayCapturePrompt;
 import org.sikuli.script.ScreenImage;
 import org.sikuli.script.Settings;
 import org.sikuli.script.SikuliScript;
 import org.sikuli.script.SikuliScriptRunner;
-import org.sikuli.script.Location;
+import org.sikuli.utility.AutoUpdater;
 
 public class SikuliIDE extends JFrame {
 
@@ -1355,6 +1355,8 @@ public class SikuliIDE extends JFrame {
     }
 
     public boolean checkUpdate(boolean isAutoCheck) {
+//TODO temporary swith off
+      if (1 == 1) return false;
       JFrame f = null;
       String ver = "";
       String details;
