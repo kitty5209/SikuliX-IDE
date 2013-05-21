@@ -12,14 +12,14 @@ The IDE to edit and run Sikuli scripts (supported scripting languages Python/Jyt
 <br /><br />
 **MANDATORY ;-)** [Have a look at major improvements and new features](https://github.com/RaiMan/SikuliX-IDE/wiki/Release-Notes-IDE)
 <br /><br />
-SikuliX-IDE is targeted at people who want to develop and run scripts using Sikuli features with one of the supported scripting languages.
+Sikuli IDE is targeted at people who want to develop and run scripts using Sikuli features with one of the supported scripting languages.
 <br /><br />
-For the use of Sikuli features in Java programs, other Java based languages or Java aware scripting languages currently not supported by SikuliX-IDE you should use SikuliX-API (https://github.com/RaiMan/SikuliX-API). 
+For the use of Sikuli features in Java programs, other Java based languages or Java aware scripting languages currently not supported by Sikuli IDE you should use [Sikuli API](https://github.com/RaiMan/SikuliX-API). 
 
 Same goes for people who want to develop, run and debug scripts using SikuliX-IDE supported scripting languages in other IDE's like Eclipse, Netbeans, ...
 <br /><br />
-The downloadable packages of SikuliX-IDE contain everything needed <br />
-including a current version of SikuliX-API (https://github.com/RaiMan/SikuliX-API).
+The downloadable packages of Sikuli IDE contain everything needed <br />
+including a current version of [Sikuli API](https://github.com/RaiMan/SikuliX-API).
 
 **Roadmap**
  - **2013 May 22:** release of Sikuli IDE 1.0.0
