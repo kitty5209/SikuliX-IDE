@@ -1355,8 +1355,6 @@ public class SikuliIDE extends JFrame {
     }
 
     public boolean checkUpdate(boolean isAutoCheck) {
-//TODO temporary swith off
-      if (1 == 1) return false;
       JFrame f = null;
       String ver = "";
       String details;

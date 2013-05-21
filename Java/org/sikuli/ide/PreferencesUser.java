@@ -484,9 +484,8 @@ public class PreferencesUser {
 		setPrefMoreHighlight(false);
 
 // ***** auto update support
-//TODO: reinvent auto update
 		setCheckUpdate(false);
-		setLastSeenUpdate("0.0");
+		setLastSeenUpdate("0.0.0");
 		setCheckUpdateTime();
 
 // ***** IDE general support
