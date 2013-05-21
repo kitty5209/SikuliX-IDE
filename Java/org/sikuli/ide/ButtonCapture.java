@@ -12,12 +12,12 @@ import java.io.File;
 import java.net.*;
 import javax.swing.*;
 import javax.swing.text.*;
-import org.sikuli.script.OverlayCapturePrompt;
-import org.sikuli.script.EventObserver;
-import org.sikuli.script.ScreenImage;
-import org.sikuli.script.EventSubject;
 import org.sikuli.ide.util.Utils;
 import org.sikuli.script.Debug;
+import org.sikuli.script.EventObserver;
+import org.sikuli.script.EventSubject;
+import org.sikuli.script.OverlayCapturePrompt;
+import org.sikuli.script.ScreenImage;
 import org.sikuli.script.Settings;
 
 class ButtonCapture extends ButtonOnToolbar implements ActionListener, Cloneable, EventObserver {
@@ -138,13 +138,12 @@ class ButtonCapture extends ButtonOnToolbar implements ActionListener, Cloneable
 				if (naming == PreferencesUser.AUTO_NAMING_TIMESTAMP) {
 					filename = Settings.getTimestamp();
 				} else if (naming == PreferencesUser.AUTO_NAMING_OCR) {
-//RaiMan not used            filename = NamingPane.getFilenameFromImage(simg.getImage());
+          filename = PatternPaneNaming.getFilenameFromImage(simg.getImage());
 					if (filename == null || filename.length() == 0) {
 						filename = Settings.getTimestamp();
 					}
 				} else {
-//RaiMan not used            String hint = NamingPane.getFilenameFromImage(simg.getImage());
-					filename = getFilenameFromUser("");//RaiMan changed getFilenameFromUser(hint);
+					filename = getFilenameFromUser(PatternPaneNaming.getFilenameFromImage(simg.getImage()));
 				}
 
 				if (filename != null) {
@@ -157,7 +156,6 @@ class ButtonCapture extends ButtonOnToolbar implements ActionListener, Cloneable
 					}
 				}
 			}
-
 			captureCompleted(null, cp);
 		}
 	}

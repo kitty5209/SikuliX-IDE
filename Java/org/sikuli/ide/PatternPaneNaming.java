@@ -12,6 +12,7 @@ import java.awt.image.*;
 import java.io.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import org.sikuli.script.TextRecognizer;
 
 //RaiMan not used import org.sikuli.script.TextRecognizer;
 
@@ -121,18 +122,18 @@ public class PatternPaneNaming extends JPanel {
       return name.substring(pos);
    }
 
-	 //<editor-fold defaultstate="collapsed" desc="getFilenameFromImage --- RaiMan not used">
-	 /*
 	 public static String getFilenameFromImage(BufferedImage img){
+     if (! PreferencesUser.getInstance().getPrefMoreTextOCR()) {
+       return "";
+     }
 		 TextRecognizer tr = TextRecognizer.getInstance();
 		 String text = tr.recognize(img);
 		 text = text.replaceAll("\\W","");
-		 if( text.length() > MAX_OCR_TEXT_LENGTH )
-			 return text.substring(0, MAX_OCR_TEXT_LENGTH);
+		 if( text.length() > MAX_OCR_TEXT_LENGTH ) {
+       return text.substring(0, MAX_OCR_TEXT_LENGTH);
+     }
 		 return text;
-	 }
-	 */
-	 //</editor-fold>
+   }
 
    public String getAbsolutePath(){
       return _txtPath.getText() + File.separatorChar +
