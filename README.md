@@ -1,4 +1,4 @@
-SikuliX-IDE 1.0.0
+Sikuli IDE 1.0.0
 ===========
 
 **Be Aware** until mid of June 2013 no progress and limited support due to vacations ;-) 
