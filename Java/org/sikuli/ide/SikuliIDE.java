@@ -588,7 +588,7 @@ public class SikuliIDE extends JFrame {
 
   public void doAbout() {
     //TODO full featured About
-    String info = "You are running SikuliX-1.0.0\n"
+    String info = "You are running Sikuli 1.0.0\n"
                 + "Need help? -> start with Help Menu\n\n"
                 + "*** Have fun ;-)\n\n"
                 + "Tsung-Hsiang Chang aka vgod\n"
@@ -596,7 +596,7 @@ public class SikuliIDE extends JFrame {
                 + "Raimund Hocke aka RaiMan\n\n"
                 + "May 2013";
     JOptionPane.showMessageDialog(this, info,
-            "SikuliX About", JOptionPane.PLAIN_MESSAGE);
+            "Sikuli About", JOptionPane.PLAIN_MESSAGE);
   }
   //</editor-fold>
 
