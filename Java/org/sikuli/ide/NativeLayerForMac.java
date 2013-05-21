@@ -9,18 +9,26 @@ package org.sikuli.ide;
 import com.apple.eawt.*;
 import java.io.File;
 import java.util.List;
+import javax.swing.JOptionPane;
+import org.sikuli.ide.SikuliIDE.FileAction;
 import org.sikuli.script.Debug;
 
 // http://lists.apple.com/archives/mac-games-dev/2001/Sep/msg00113.html
 // full key table: http://www.mactech.com/articles/mactech/Vol.04/04.12/Macinkeys/
 // modifiers code: http://www.mactech.com/macintosh-c/chap02-1.html
-public class NativeLayerForMac implements NativeLayer, PreferencesHandler, OpenFilesHandler, QuitHandler {
+public class NativeLayerForMac implements NativeLayer, AboutHandler, PreferencesHandler, OpenFilesHandler, QuitHandler {
 
 	@Override
 	public void initIDE(final SikuliIDE ide) {
 	}
 
-	@Override
+  @Override
+  public void handleAbout(AppEvent.AboutEvent evt) {
+    Debug.log(5, "NativeLayerforMac: aboutHandler entered");
+    SikuliIDE.getInstance().doAbout();
+  }
+
+  @Override
 	public void handlePreferences(AppEvent.PreferencesEvent evt) {
 			SikuliIDE.getInstance().showPreferencesWindow();
 	}
@@ -59,6 +67,7 @@ public class NativeLayerForMac implements NativeLayer, PreferencesHandler, OpenF
 	@Override
 	public void initApp() {
 
+		Application.getApplication().setAboutHandler(this);
 		Application.getApplication().setPreferencesHandler(this);
 		Application.getApplication().setOpenFileHandler(this);
 		Application.getApplication().setQuitHandler(this);

@@ -585,6 +585,19 @@ public class SikuliIDE extends JFrame {
     }
     return ret;
   }
+
+  public void doAbout() {
+    //TODO full featured About
+    String info = "You are running SikuliX-1.0.0\n"
+                + "Need help? -> start with Help Menu\n\n"
+                + "*** Have fun ;-)\n\n"
+                + "Tsung-Hsiang Chang aka vgod\n"
+                + "Tom Yeh\n"
+                + "Raimund Hocke aka RaiMan\n\n"
+                + "May 2013";
+    JOptionPane.showMessageDialog(this, info,
+            "SikuliX About", JOptionPane.PLAIN_MESSAGE);
+  }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="isInited --- RaiMan not used">
@@ -647,6 +660,13 @@ public class SikuliIDE extends JFrame {
     int scMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
     _fileMenu.setMnemonic(java.awt.event.KeyEvent.VK_F);
 
+    if (!Settings.isMac()) {
+      _fileMenu.add(createMenuItem("About SikuliX",
+              KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, scMask),
+              new FileAction(FileAction.ABOUT)));
+      _fileMenu.addSeparator();
+    }
+
     _fileMenu.add(createMenuItem(_I("menuFileNew"),
             KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, scMask),
             new FileAction(FileAction.NEW)));
@@ -674,8 +694,8 @@ public class SikuliIDE extends JFrame {
             new FileAction(FileAction.CLOSE_TAB)));
 
     if (!Settings.isMac()) {
-      _fileMenu.addSeparator();
-      _fileMenu.add(createMenuItem(_I("menuFilePreferences"),
+       _fileMenu.addSeparator();
+       _fileMenu.add(createMenuItem(_I("menuFilePreferences"),
               KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, scMask),
               new FileAction(FileAction.PREFERENCES)));
     }
@@ -689,6 +709,7 @@ public class SikuliIDE extends JFrame {
 
   class FileAction extends MenuAction {
 
+    static final String ABOUT = "doAbout";
     static final String NEW = "doNew";
     static final String OPEN = "doLoad";
     static final String SAVE = "doSave";
@@ -704,6 +725,10 @@ public class SikuliIDE extends JFrame {
 
     public FileAction(String item) throws NoSuchMethodException {
       super(item);
+    }
+
+    public void doAbout(ActionEvent ae) {
+      SikuliIDE.getInstance().doAbout();
     }
 
     public void doQuit(ActionEvent ae) {
