@@ -1,4 +1,4 @@
-SikuliX-IDE
+SikuliX-IDE 1.0.0
 ===========
 
 **Download of current versions (non-beta)** visit the official [**download page on Launchpad**](https://launchpad.net/sikuli/+download).<br />
