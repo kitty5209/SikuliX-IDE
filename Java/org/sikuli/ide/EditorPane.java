@@ -224,6 +224,8 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
       if (res != JOptionPane.YES_OPTION) {
         return null;
       }
+    } else {
+      FileManager.mkdir(bundlePath);
     }
     saveAsBundle(bundlePath, (SikuliIDE.getInstance().getCurrentFileTabTitle()));
 
@@ -232,20 +234,18 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
 
   private void saveAsBundle(String bundlePath, String current) throws IOException {
     bundlePath = Utils.slashify(bundlePath, true);
-    if (_srcBundlePath != null && !_srcBundleTemp) {
+    if (_srcBundlePath != null) {
       FileManager.xcopy(_srcBundlePath, bundlePath, current);
-    } else {
-      FileManager.mkdir(bundlePath);
-      if (_srcBundleTemp) {
-        FileManager.deleteTempDir(_srcBundlePath);
-        _srcBundleTemp = false;
-      }
+    }
+    if (_srcBundleTemp) {
+      FileManager.deleteTempDir(_srcBundlePath);
+      _srcBundleTemp = false;
     }
     setSrcBundle(bundlePath);
     _editingFile = createSourceFile(bundlePath, ".py");
     Debug.log(2, "save to bundle: " + getSrcBundle());
     writeSrcFile();
-    //TODO: update all bundle references in ImageButtons
+    reparse();
   }
 
   private File createSourceFile(String bundlePath, String ext) {
@@ -269,7 +269,6 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
     if (PreferencesUser.getInstance().getAtSaveCleanBundle()) {
       cleanBundle(getSrcBundle());
     }
-//TODO: delete old .py and .html
     setDirty(false);
   }
 
