@@ -1,7 +1,7 @@
 Sikuli IDE 1.0.1 -- Branch development
 ===========
 
-**Download of current versions (non-beta)** visit the official [**download page on Launchpad**](https://launchpad.net/sikuli/+download).<br />
+**Download of current versions (1.0.0)** visit the official [**download page on Launchpad**](https://launchpad.net/sikuli/+download).<br />
 
 The IDE to edit and run Sikuli scripts (supported scripting languages Python/Jython).
 <br /><br />
