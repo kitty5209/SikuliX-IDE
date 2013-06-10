@@ -1,4 +1,4 @@
-Sikuli IDE 1.0.0
+Sikuli IDE 1.0.1 -- Branch development
 ===========
 
 **Download of current versions (non-beta)** visit the official [**download page on Launchpad**](https://launchpad.net/sikuli/+download).<br />
@@ -17,11 +17,6 @@ The downloadable packages of Sikuli IDE contain everything needed <br />
 including a current version of [Sikuli API](https://github.com/RaiMan/SikuliX-API).
 
 **Roadmap**
- - **2013 May 22:** release of Sikuli IDE 1.0.0
-  - more information: [start here ...](http://www.sikuli.org/download.html)
-  - there will be service updates, if necessary (Help menu -> check for updates or Prefs: autoupdate)
-<br />
-<br />
  - **2013 June 10:** open a developement branch for Sikuli IDE 1.1
   - better support for images and usage of Sikuli features
   - implement more standard IDE features
