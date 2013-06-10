@@ -1,12 +1,7 @@
 Sikuli IDE 1.0.0
 ===========
 
-**Be Aware** until mid of June 2013 no progress and limited support due to vacations ;-) 
-<hr />
-
 **Download of current versions (non-beta)** visit the official [**download page on Launchpad**](https://launchpad.net/sikuli/+download).<br />
-
-**latest betaversion: 1.0 Beta999 (last beta for 1.0)** --- [click for downloadable beta packages](https://github.com/RaiMan/SikuliX-IDE/wiki/Packages)
 
 The IDE to edit and run Sikuli scripts (supported scripting languages Python/Jython).
 <br /><br />
@@ -23,15 +18,18 @@ including a current version of [Sikuli API](https://github.com/RaiMan/SikuliX-AP
 
 **Roadmap**
  - **2013 May 22:** release of Sikuli IDE 1.0.0
-  - there will be packages for Windows, Mac and Linux both 32- and 64-Bit
   - more information: [start here ...](http://www.sikuli.org/download.html)
   - there will be service updates, if necessary (Help menu -> check for updates or Prefs: autoupdate)
 <br />
 <br />
- - **2013 June 15:** open a developement branch for Sikuli IDE 1.1
+ - **2013 June 10:** open a developement branch for Sikuli IDE 1.1
   - better support for images and usage of Sikuli features
   - implement more standard IDE features
   - support JRuby as scripting language
+<br />
+<br />
+ - **2013 Juli 29:** service update Sikuli IDE 1.0.1
+  - bug fixes and some enhancements
 <br />
 <br />
  - **2013 October 31:** release of Sikuli IDE 1.1
@@ -54,5 +52,5 @@ including a current version of [Sikuli API](https://github.com/RaiMan/SikuliX-AP
  - you might always post an issue with any content in this repo of course
 
 **Contribution**
- - pull requests are always welcome, but must be with reference to the development branch (beginning mid June 2013)
+ - pull requests are always welcome (beginning mid June 2013)
  - everyone is welcome to add interesting stuff, experiences, solutions to the wiki in this repo
