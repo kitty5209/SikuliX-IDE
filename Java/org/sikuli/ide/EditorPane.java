@@ -30,9 +30,9 @@ import org.sikuli.script.ImageLocator;
 import org.sikuli.script.Settings;
 import org.sikuli.ide.indentation.PythonIndentation;
 import org.sikuli.ide.util.Utils;
-import org.sikuli.script.SikuliScriptRunner;
 import org.sikuli.script.Debug;
 import org.sikuli.script.FileManager;
+import org.sikuli.script.IScriptRunner;
 import org.sikuli.script.Location;
 
 public class EditorPane extends JTextPane implements KeyListener, CaretListener {
@@ -368,7 +368,7 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
   }
 
   private void convertSrcToHtml(String bundle) {
-    PythonInterpreter py = SikuliScriptRunner.getPythonInterpreter();
+    PythonInterpreter py = new PythonInterpreter();
     Debug.log(2, "Convert Sikuli source code " + bundle + " to HTML");
     py.set("local_convert", true);
     py.set("sikuli_src", bundle);
@@ -380,7 +380,7 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
       return;
     }
 //TODO implement in Java
-    PythonInterpreter py = SikuliScriptRunner.getPythonInterpreter();
+    PythonInterpreter py = new PythonInterpreter();
     Debug.log(2, "Clear source bundle " + bundle);
     py.set("bundle_path", bundle);
     py.exec(pyBundleCleaner);

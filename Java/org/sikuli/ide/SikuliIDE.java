@@ -39,12 +39,13 @@ import org.sikuli.script.FileManager;
 import org.sikuli.script.HotkeyEvent;
 import org.sikuli.script.HotkeyListener;
 import org.sikuli.script.HotkeyManager;
+import org.sikuli.script.IScriptRunner;
 import org.sikuli.script.Location;
 import org.sikuli.script.OverlayCapturePrompt;
+import org.sikuli.script.Screen;
 import org.sikuli.script.ScreenImage;
 import org.sikuli.script.Settings;
 import org.sikuli.script.SikuliScript;
-import org.sikuli.script.SikuliScriptRunner;
 import org.sikuli.utility.AutoUpdater;
 
 public class SikuliIDE extends JFrame {
@@ -98,19 +99,6 @@ public class SikuliIDE extends JFrame {
   private static boolean runMe = false;
   private int restoredScripts = 0;
   private int alreadyOpenedTab = -1;
-  private static final String NL = String.format("%n");
-  private Pattern pFile = Pattern.compile("File..(.*?\\.py).*?"
-          + ",.*?line.*?(\\d+),.*?in(.*?)" + NL + "(.*?)" + NL);
-  private int errorLine;
-  private int errorColumn;
-  private String errorType;
-  private String errorText;
-  private int errorClass;
-  private String errorTrace;
-  private static final int PY_SYNTAX = 0;
-  private static final int PY_RUNTIME = 1;
-  private static final int PY_JAVA = 2;
-  private static final int PY_UNKNOWN = -1;
   private PreferencesUser prefs;
 
   public static String _I(String key, Object... args) {
@@ -200,7 +188,6 @@ public class SikuliIDE extends JFrame {
     }
 
 // we should open the IDE
-		Settings.setArgs(CommandArgs.getPyArgs(_cmdLine));
 		initNativeLayer();
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -240,10 +227,14 @@ public class SikuliIDE extends JFrame {
 
     _windowSize = prefs.getIdeSize();
     _windowLocation = prefs.getIdeLocation();
-    Rectangle s = (new Location(_windowLocation)).getScreen().getRect();
+    Screen m = (new Location(_windowLocation)).getScreen();
+    if (m == null) {
+      m = Screen.getPrimaryScreen();
+      _windowSize.width = 0;
+    }
+    Rectangle s = m.getBounds();
     if (_windowSize.width == 0 || _windowSize.width > s.width ||
-            _windowSize.height > s.height ||
-            (new Location(_windowLocation)).getScreenContaining(false) == null) {
+            _windowSize.height > s.height) {
       if (s.width < 1025) {
         _windowSize = new Dimension(1024, 700);
         _windowLocation = new Point(0, 0);
@@ -1732,16 +1723,6 @@ public class SikuliIDE extends JFrame {
             resetErrorMark();
             runPython(tmpFile);
           } catch (Exception e) {
-            java.util.regex.Pattern p =
-                    java.util.regex.Pattern.compile("SystemExit: ([0-9]+)");
-            Matcher matcher = p.matcher(e.toString());
-//TODO error stop I18N
-            if (matcher.find()) {
-              Debug.info(_I("msgExit", matcher.group(1)));
-            } else {
-              //Debug.error(_I("msgStopped"));
-              findErrorSource(e, tmpFile.getAbsolutePath());
-            }
           } finally {
             SikuliIDE.getInstance().setIsRunningScript(false);
             SikuliIDE.getInstance().setVisible(true);
@@ -1753,11 +1734,16 @@ public class SikuliIDE extends JFrame {
     }
 
     protected void runPython(File f) throws Exception {
-      String path = SikuliIDE.getInstance().getCurrentBundlePath();
-      SikuliScriptRunner srunner = new SikuliScriptRunner(Settings.getArgs(), "IDE");
+      File path = new File(SikuliIDE.getInstance().getCurrentBundlePath());
+      IScriptRunner srunner = SikuliScript.getScriptRunner("jython", null, Settings.getArgs());
+      if (srunner == null) {
+        Debug.error("Could not load the Jython script runner");
+        return;
+      }
       addPythonCode(srunner);
       try {
-        srunner.runPython(path, f);
+        addErrorMark(srunner.runScript(f, path, Settings.getArgs(),
+                new String[] {_mainPane.getTitleAt(_mainPane.getSelectedIndex())}));
         srunner.close();
       } catch (Exception e) {
         srunner.close();
@@ -1765,7 +1751,7 @@ public class SikuliIDE extends JFrame {
       }
     }
 
-    protected void addPythonCode(SikuliScriptRunner srunner) {
+    protected void addPythonCode(IScriptRunner srunner) {
     }
 
     public void stopRunning() {
@@ -1783,148 +1769,13 @@ public class SikuliIDE extends JFrame {
       setToolTipText(_I("btnRun", stopHint));
     }
 
-    private void findErrorSource(Throwable thr, String filename) {
-      String err = thr.toString();
-//      Debug.error("------------- Traceback -------------\n" + err +
-//              "------------- Traceback -------------\n");
-      errorLine = -1;
-      errorColumn = -1;
-      errorClass = PY_UNKNOWN;
-      errorType = "--UnKnown--";
-      errorText = "--UnKnown--";
-
-      String msg;
-      Matcher mFile = null;
-
-      if (err.startsWith("Traceback")) {
-        Pattern pError = Pattern.compile(NL + "(.*?):.(.*)$");
-        mFile = pFile.matcher(err);
-        if (mFile.find()) {
-          Debug.log(2, "Runtime error line: " + mFile.group(2)
-                  + "\n in function: " + mFile.group(3)
-                  + "\n statement: " + mFile.group(4));
-          errorLine = Integer.parseInt(mFile.group(2));
-          errorClass = PY_RUNTIME;
-          Matcher mError = pError.matcher(err);
-          if (mError.find()) {
-            Debug.log(2, "Error:" + mError.group(1));
-            Debug.log(2, "Error:" + mError.group(2));
-            errorType = mError.group(1);
-            errorText = mError.group(2);
-          } else {
-//org.sikuli.core.FindFailed: FindFailed: can not find 1352647716171.png on the screen
-            Pattern pFF = Pattern.compile(": FindFailed: (.*?)" + NL);
-            Matcher mFF = pFF.matcher(err);
-            if (mFF.find()) {
-              errorType = "FindFailed";
-              errorText = mFF.group(1);
-            } else {
-              errorClass = PY_UNKNOWN;
-            }
-          }
-        }
-      } else if (err.startsWith("SyntaxError")) {
-        Pattern pLineS = Pattern.compile(", (\\d+), (\\d+),");
-        java.util.regex.Matcher mLine = pLineS.matcher(err);
-        if (mLine.find()) {
-          Debug.log(4, "SyntaxError error line: " + mLine.group(1));
-          Pattern pText = Pattern.compile("\\((.*?)\\(");
-          java.util.regex.Matcher mText = pText.matcher(err);
-          mText.find();
-          errorText = mText.group(1) == null ? errorText : mText.group(1);
-          Debug.log(4, "SyntaxError: " + errorText);
-          errorLine = Integer.parseInt(mLine.group(1));
-          errorColumn = Integer.parseInt(mLine.group(2));
-          errorClass = PY_SYNTAX;
-          errorType = "SyntaxError";
-        }
-      }
-
-      msg = "script [ " + _mainPane.getTitleAt(_mainPane.getSelectedIndex());
-      if (errorLine != -1) {
-        //Debug.error(_I("msgErrorLine", srcLine));
-        msg += " ] stopped with error in line " + errorLine;
-        if (errorColumn != -1) {
-          msg += " at column " + errorColumn;
-        }
-        addErrorMark(errorLine);
-      } else {
-        msg += "] stopped with error at line --unknown--";
-      }
-
-      if (errorClass == PY_RUNTIME || errorClass == PY_SYNTAX) {
-        Debug.error(msg);
-        Debug.error(errorType + " ( " + errorText + " )");
-        if (errorClass == PY_RUNTIME) {
-          errorClass = findErrorSourceWalkTrace(mFile, filename);
-          if (errorTrace.length() > 0) {
-            Debug.error("--- Traceback --- error source first\n"
-                    + "line: module ( function ) statement \n" + errorTrace);
-          }
-        }
-      } else if (errorClass == PY_JAVA) {
-      } else {
-        Debug.error(msg);
-        Debug.error("Could not evaluate error source nor reason. Analyze StackTrace!");
-        Debug.error(err);
-      }
-    }
-
-    private int findErrorSourceWalkTrace(Matcher m, String filename) {
-//[error] Traceback (most recent call last):
-//File "/var/folders/wk/pcty7jkx1r5bzc5dvs6n5x_40000gn/T/sikuli-tmp3464751893408897244.py", line 2, in
-//sub.hello()
-//File "/Users/rhocke/NetBeansProjects/RaiManSikuli2012-Script/sub.sikuli/sub.py", line 4, in hello
-//print "hello from sub", 1/0
-//ZeroDivisionError: integer division or modulo by zero
-      Pattern pModule = Pattern.compile(".*/(.*?).py");
-      //Matcher mFile = pFile.matcher(etext);
-      String mod;
-      String modIgnore = "SikuliImporter,";
-      StringBuilder trace = new StringBuilder();
-      String telem;
-      while (m.find()) {
-        if (m.group(1).equals(filename)) {
-          mod = "main";
-        } else {
-          Matcher mModule = pModule.matcher(m.group(1));
-          mModule.find();
-          mod = mModule.group(1);
-          if (modIgnore.contains(mod + ",")) {
-            continue;
-          }
-        }
-        telem = m.group(2) + ": " + mod + " ( "
-                + m.group(3) + " ) " + m.group(4) + NL;
-        //Debug.log(2,telem);
-        trace.insert(0, telem);
-//        Debug.log(2,"Rest of Trace ----\n" + etext.substring(mFile.end()));
-      }
-      Debug.log(2, "------------- Traceback -------------\n" + trace);
-      errorTrace = trace.toString();
-      return errorClass;
-    }
-
-    private void findErrorSourceFromJavaStackTrace(Throwable thr, String filename) {
-      Debug.error("seems to be an error in the Java API supporting code");
-      StackTraceElement[] s;
-      Throwable t = thr;
-      while (t != null) {
-        s = t.getStackTrace();
-        Debug.log(2, "stack trace:");
-        for (int i = s.length - 1; i >= 0; i--) {
-          StackTraceElement si = s[i];
-          Debug.log(2, si.getLineNumber() + " " + si.getFileName());
-          if (si.getLineNumber() >= 0 && filename.equals(si.getFileName())) {
-            errorLine = si.getLineNumber();
-          }
-        }
-        t = t.getCause();
-        Debug.log(2, "cause: " + t);
-      }
-    }
-
     public void addErrorMark(int line) {
+      if (line < -1) {
+        line *= -1;
+      }
+      else {
+        return;
+      }
       JScrollPane scrPane = (JScrollPane) _mainPane.getSelectedComponent();
       EditorLineNumberView lnview = (EditorLineNumberView) (scrPane.getRowHeader().getView());
       lnview.addErrorMark(line);
@@ -1951,8 +1802,9 @@ public class SikuliIDE extends JFrame {
     }
 
     @Override
-    protected void addPythonCode(SikuliScriptRunner srunner) {
-      srunner.runSlowMotion();
+    protected void addPythonCode(IScriptRunner srunner) {
+      srunner.execBefore(null);
+      srunner.execBefore(new String[]{"setShowActions=True"});
     }
   }
 
