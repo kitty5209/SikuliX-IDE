@@ -30,7 +30,6 @@ import org.jdesktop.swingx.JXTaskPaneContainer;
 import org.sikuli.ide.EditorKit;
 import org.sikuli.ide.extmanager.ExtensionManagerFrame;
 import org.sikuli.ide.util.Utils;
-import org.sikuli.ide.z_notused.sikuli_test.UnitTestRunner;
 import org.sikuli.script.CommandArgs;
 import org.sikuli.script.Debug;
 import org.sikuli.script.EventObserver;
@@ -90,7 +89,7 @@ public class SikuliIDE extends JFrame {
   private JCheckBoxMenuItem _chkShowUnitTest;
   private JMenuItem chkShowCmdList = null;
   private JCheckBoxMenuItem chkShowThumbs;
-  private UnitTestRunner _testRunner;
+  //private UnitTestRunner _testRunner;
   private static CommandLine _cmdLine;
   private static boolean _useStderr = false;
   private static SikuliIDE _instance = null;
@@ -2174,6 +2173,7 @@ public class SikuliIDE extends JFrame {
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="IDE Unit Testing --- RaiMan not used">
+  /*
   private void initSidePane() {
     initUnitPane();
     _sidePane = new JXCollapsiblePane(JXCollapsiblePane.Direction.RIGHT);
@@ -2199,6 +2199,7 @@ public class SikuliIDE extends JFrame {
     _chkShowUnitTest.setState(false);
     addAuxTab(_I("paneTestTrace"), _testRunner.getTracePane());
   }
+*/
 
   public void addAuxTab(String tabName, JComponent com) {
     msgPane.addTab(tabName, com);

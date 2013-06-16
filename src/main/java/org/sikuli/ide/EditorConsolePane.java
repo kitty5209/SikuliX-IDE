@@ -26,7 +26,6 @@ import javax.swing.text.*;
 import javax.swing.text.html.*;
 import org.python.util.PythonInterpreter;
 import org.sikuli.script.Debug;
-import org.sikuli.script.FileManager;
 import org.sikuli.script.SikuliScript;
 import org.sikuli.scriptrunner.JythonScriptRunner;
 
