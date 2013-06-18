@@ -42,6 +42,7 @@ import org.sikuli.script.IScriptRunner;
 import org.sikuli.script.Location;
 import org.sikuli.script.OverlayCapturePrompt;
 import org.sikuli.script.Screen;
+import org.sikuli.script.ScreenHighlighter;
 import org.sikuli.script.ScreenImage;
 import org.sikuli.script.Settings;
 import org.sikuli.script.SikuliScript;
@@ -1726,6 +1727,7 @@ public class SikuliIDE extends JFrame {
             SikuliIDE.getInstance().setIsRunningScript(false);
             SikuliIDE.getInstance().setVisible(true);
             _runningThread = null;
+            ScreenHighlighter.closeAll();
           }
         }
       };
