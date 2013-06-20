@@ -13,8 +13,6 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.regex.Matcher;
@@ -25,15 +23,14 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
-import org.python.util.PythonInterpreter;
 import org.sikuli.script.ImageLocator;
 import org.sikuli.script.Settings;
 import org.sikuli.ide.indentation.PythonIndentation;
 import org.sikuli.ide.util.Utils;
 import org.sikuli.script.Debug;
 import org.sikuli.script.FileManager;
-import org.sikuli.script.IScriptRunner;
 import org.sikuli.script.Location;
+import org.sikuli.script.SikuliScript;
 
 public class EditorPane extends JTextPane implements KeyListener, CaretListener {
 
@@ -46,29 +43,14 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
   private EditorUndoManager _undo = null;
   private boolean hasErrorHighlight = false;
   public boolean showThumbs;
-
   // TODO: move to SikuliDocument ????
   private PythonIndentation _indentationLogic;
-
   static Pattern patPngStr = Pattern.compile("(\"[^\"]+?\\.(?i)(png|jpg)\")");
   static Pattern patCaptureBtn = Pattern.compile("(\"__CLICK-TO-CAPTURE__\")");
   static Pattern patPatternStr = Pattern.compile(
           "\\b(Pattern\\s*\\(\".*?\"\\)(\\.\\w+\\([^)]*\\))+)");
   static Pattern patRegionStr = Pattern.compile(
           "\\b(Region\\s*\\([\\d\\s,]+\\))");
-
-  //TODO SikuliToHtmlConverter implement in Java
-  final static InputStream SikuliToHtmlConverter =
-          SikuliIDE.class.getResourceAsStream("/scripts/sikuli2html.py");
-  static String pyConverter =
-          FileManager.convertStreamToString(SikuliToHtmlConverter);
-
-  //TODO SikuliBundleCleaner implement in Java
-  final static InputStream SikuliBundleCleaner =
-          SikuliIDE.class.getResourceAsStream("/scripts/clean-dot-sikuli.py");
-  static String pyBundleCleaner =
-          FileManager.convertStreamToString(SikuliBundleCleaner);
-
   //TODO what is it for???
   private int _caret_last_x = -1;
   private boolean _can_update_caret_last_x = true;
@@ -368,22 +350,16 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
   }
 
   private void convertSrcToHtml(String bundle) {
-    PythonInterpreter py = new PythonInterpreter();
-    Debug.log(2, "Convert Sikuli source code " + bundle + " to HTML");
-    py.set("local_convert", true);
-    py.set("sikuli_src", bundle);
-    py.exec(pyConverter);
+    SikuliScript.getScriptRunner("jython", null, null).doSomethingSpecial("convertSrcToHtml",
+            new String[]{bundle});
   }
 
   private void cleanBundle(String bundle) {
     if (!PreferencesUser.getInstance().getAtSaveCleanBundle()) {
       return;
     }
-//TODO implement in Java
-    PythonInterpreter py = new PythonInterpreter();
-    Debug.log(2, "Clear source bundle " + bundle);
-    py.set("bundle_path", bundle);
-    py.exec(pyBundleCleaner);
+    SikuliScript.getScriptRunner("jython", null, null).doSomethingSpecial("cleanBundle",
+            new String[]{bundle});
   }
 
   public File copyFileToBundle(String filename) {
@@ -464,7 +440,6 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
   }
 
   //</editor-fold>
-
   //<editor-fold defaultstate="collapsed" desc="Caret handling">
 //TODO not used
   @Override
@@ -598,12 +573,13 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
       this.read(new BufferedReader(new InputStreamReader(new FileInputStream(temp), "UTF8")), null);
       updateDocumentListeners();
       return true;
-    } catch (IOException ex) { }
+    } catch (IOException ex) {
+    }
     return false;
   }
 
   private void parse(Element node) {
-    if (! showThumbs) {
+    if (!showThumbs) {
       // do not show any thumbnails
       return;
     }
@@ -621,7 +597,7 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
   }
 
   private int parseRange(int start, int end) {
-    if (! showThumbs) {
+    if (!showThumbs) {
       // do not show any thumbnails
       return end;
     }
@@ -696,28 +672,28 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
   }
 
   public String getPatternString(String ifn, float sim, Location off) {
-		if (ifn == null) {
-			return "\"" + EditorPatternLabel.CAPTURE + "\"";
-		}
-		String img = new File(ifn).getName();
-		String pat = "Pattern(\"" + img + "\")";
-		String ret = "";
+    if (ifn == null) {
+      return "\"" + EditorPatternLabel.CAPTURE + "\"";
+    }
+    String img = new File(ifn).getName();
+    String pat = "Pattern(\"" + img + "\")";
+    String ret = "";
     if (sim > 0) {
       if (sim >= 0.99F) {
         ret += ".exact()";
       } else if (sim != 0.7F) {
         ret += String.format(Locale.ENGLISH, ".similar(%.2f)", sim);
       }
-		}
-		if (off != null && (off.x != 0 || off.y != 0)) {
-			ret += ".targetOffset(" + off.x + "," + off.y + ")";
-		}
-		if (!ret.equals("")) {
-			ret = pat + ret;
-		} else {
-			ret = "\"" + img + "\"";
-		}
-		return ret;
+    }
+    if (off != null && (off.x != 0 || off.y != 0)) {
+      ret += ".targetOffset(" + off.x + "," + off.y + ")";
+    }
+    if (!ret.equals("")) {
+      ret = pat + ret;
+    } else {
+      ret = "\"" + img + "\"";
+    }
+    return ret;
   }
   //</editor-fold>
 
@@ -946,9 +922,9 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
     }
   }
 //</editor-fold>
-
   //<editor-fold defaultstate="collapsed" desc="currently not used">
   private String _tabString = "   ";
+
   private void setTabSize(int charactersPerTab) {
     FontMetrics fm = this.getFontMetrics(this.getFont());
     int charWidth = fm.charWidth('w');
@@ -984,8 +960,8 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
     doc.remove(pos - 1, 1);
     doc.insertString(pos - 1, _tabString, null);
   }
-
   private Class _historyBtnClass;
+
   private void setHistoryCaptureButton(ButtonCapture btn) {
     _historyBtnClass = btn.getClass();
   }
