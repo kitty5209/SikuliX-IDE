@@ -1743,8 +1743,9 @@ public class SikuliIDE extends JFrame {
       }
       addPythonCode(srunner);
       try {
-        addErrorMark(srunner.runScript(f, path, Settings.getArgs(),
-                new String[] {_mainPane.getTitleAt(_mainPane.getSelectedIndex())}));
+        int ret = srunner.runScript(f, path, 
+                Settings.getArgs(), new String[] {_mainPane.getTitleAt(_mainPane.getSelectedIndex())});
+        addErrorMark(ret);
         srunner.close();
       } catch (Exception e) {
         srunner.close();
