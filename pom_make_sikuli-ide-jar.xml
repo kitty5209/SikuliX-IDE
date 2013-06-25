@@ -80,48 +80,9 @@
 			<artifactId>mac_widgets</artifactId>
 			<version>0.9.5</version>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8</version>
-			<scope>test</scope>
-			<optional>true</optional>
-		</dependency>
 	</dependencies>
 
 	<build>
-		<!-- Enable this plugin to include execute action (needed for eclipse)
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.codehaus.mojo</groupId>
-										<artifactId>aspectj-maven-plugin</artifactId>
-										<versionRange>[1.0,)</versionRange>
-										<goals>
-											<goal>test-compile</goal>
-											<goal>compile</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute />
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-    -->
-
 		<finalName>sikulix-ide</finalName>
 
 		<plugins>
@@ -134,9 +95,9 @@
 				</configuration>
 			</plugin>
 
-			<!-- Plugin to create an executable jar -->
+			<!-- Plugin to create an executable jar containing all dependencies -->
 			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
+				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
 					<archive>
@@ -144,38 +105,22 @@
 							<mainClass>org.sikuli.ide.SikuliIDE</mainClass>
 						</manifest>
 					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<finalName>sikuli-ide</finalName>
 				</configuration>
-			</plugin>
-
-			<!-- Plugin to create an additional jar containing the source 
-			<plugin>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
 				<executions>
 					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
+						<id>make-assembly</id>
+						<phase>package</phase>
 						<goals>
-							<goal>jar-no-fork</goal>
+							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
-      -->
       
-			<!-- Plugin to run the jar using mvn exec:java -Dexec.args=" ... parms ... "-->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.2.1</version>
-        <executions><execution>
-          <goals><goal>java</goal></goals>
-        </execution></executions>
-        <configuration>
-          <mainClass>org.sikuli.ide.SikuliIDE</mainClass>
-        </configuration>
-      </plugin>
-
 		</plugins>
 	</build>
 </project>
