@@ -13,11 +13,9 @@ For the use of Sikuli features in Java programs, other Java based languages or J
 
 Same goes for people who want to develop, run and debug scripts using SikuliX-IDE supported scripting languages in other IDE's like Eclipse, Netbeans, ...
 <br /><br />
-This repo is **fully Maven**, so a fork of this repo can be directly used as project in NetBeans/Eclipse/...<br />
-or using mvn on commandline. <br />
-It produces a fully self contained sikuli-ide.jar <br />
-It depends on [Sikuli API](https://github.com/RaiMan/SikuliX-API), [Sikuli Jython](https://github.com/RaiMan/SikuliX-Jython) and [Sikuli Natives](https://github.com/RaiMan/SikuliX-Natives).<br />
-[... click for more info](https://github.com/RaiMan/SikuliX-IDE/wiki/Maven-support)
+This repo is **fully Maven**, so a fork of this repo can be directly used as project in NetBeans/Eclipse/... or with mvn on commandline. <br />
+It depends on [Sikuli API](https://github.com/RaiMan/SikuliX-API), [Sikuli Jython](https://github.com/RaiMan/SikuliX-Jython) and [Sikuli Setup](https://github.com/RaiMan/SikuliX-Setup).<br />
+[... click for more info about package production](https://github.com/RaiMan/SikuliX-IDE/wiki/Maven-support)
 <br /><br />
 The downloadable packages of Sikuli IDE contain everything needed <br />
 including a current version of [Sikuli API](https://github.com/RaiMan/SikuliX-API).
